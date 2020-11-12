@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Controllers\PenjualanController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PenjualanController;
+use App\Http\Controllers\master\PelangganController;
+use App\Http\Controllers\master\BankController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,5 +20,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::prefix('/master')->group(function () {
+    Route::prefix('/pelanggan')->group(function () {
+        Route::get('/', [PelangganController::class, 'index'])->name('pelanggan.index');
+    });
+    Route::prefix('/bank')->group(function () {
+        Route::get('/', [BankController::class, 'index'])->name('bank.index');
+    });
+});
 Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan.index');
 Route::get('/data_tables_penjualan', [PenjualanController::class, 'dataTablesPenjualan'])->name('dataTables.penjualan');

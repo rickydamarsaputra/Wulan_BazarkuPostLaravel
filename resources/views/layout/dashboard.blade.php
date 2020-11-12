@@ -29,16 +29,8 @@
       <!-- Main Content -->
       <div class="main-content">
         <section class="section">
-          <div class="section-header">
-            <h1>@yield('sectionTitle')</h1>
-          </div>
-
           <div class="section-body">
-            <div class="card">
-              <div class="card-body">
-                @yield('content')
-              </div>
-            </div>
+            @yield('content')
           </div>
         </section>
       </div>
@@ -64,6 +56,7 @@
 
   <!-- JS Libraies -->
   <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.3/dist/alpine.min.js" defer></script>
   <script src="{{asset('/assets/js/dataTables.bootstrap4.min.js')}}"></script>
   <!-- <script src="{{asset('/assets/js/jquery.dataTables.min.js')}}"></script> -->
 

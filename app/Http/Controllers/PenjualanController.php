@@ -9,8 +9,26 @@ class PenjualanController extends Controller
 {
     public function index()
     {
-        $penjualan = Penjualan::limit(100)->get();
-        return view('pages.penjualan.index', ['penjualan' => $penjualan]);
+        $penjualan = Penjualan::select("total", "ongkir", "diskon", "pajak", "grand_total")->get();
+        $totalNilai = 0;
+        $totalOngkir = 0;
+        $totalDiskon = 0;
+        $totalPajak = 0;
+        $totalGrandTotal = 0;
+        foreach ($penjualan as $penjual) {
+            $totalNilai += $penjual->total;
+            $totalOngkir += $penjual->ongkir;
+            $totalDiskon += $penjual->diskon;
+            $totalPajak += $penjual->pajak;
+            $totalGrandTotal += $penjual->grand_total;
+        }
+        return view('pages.penjualan.index', [
+            'totalNilai' => $totalNilai,
+            'totalOngkir' => $totalOngkir,
+            'totalDiskon' => $totalDiskon,
+            'totalPajak' => $totalPajak,
+            'totalGrandTotal' => $totalGrandTotal,
+        ]);
     }
 
     public function dataTablesPenjualan()

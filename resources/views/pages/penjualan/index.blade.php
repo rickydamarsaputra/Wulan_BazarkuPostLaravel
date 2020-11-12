@@ -2,23 +2,63 @@
 @section('sectionTitle', 'Penjualan Page')
 
 @section('content')
-<div class="table-responsive">
-  <table class="table table-striped text-uppercase" id="data__table__penjualan">
-    <thead>
-      <tr>
-        <th class="text-center">#</th>
-        <th>Tanggal Jual</th>
-        <th>NO.Penjualan</th>
-        <th>Nama Pelanggan</th>
-        <th>Divisi</th>
-        <th>Sales</th>
-        <th>Ekspedisi</th>
-        <th>Bank</th>
-        <th>Grand Total</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-  </table>
+<div x-data="{itemToggle: 'detail'}">
+  <div class="section-header d-flex justify-content-between">
+    <h1>@yield('sectionTitle')</h1>
+    <div>
+      <button @click="itemToggle = 'detail'" :class="{'btn-primary' : itemToggle == 'detail', 'btn-info' : itemToggle != 'detail'}" class="btn text-uppercase mr-2">detail</button>
+      <button @click="itemToggle = 'table'" :class="{'btn-primary' : itemToggle == 'table', 'btn-info' : itemToggle != 'table'}" class="btn text-uppercase">tabel</button>
+    </div>
+  </div>
+  <div class="card" x-show="itemToggle == 'detail'">
+    <div class="card-body">
+      <h5 class="card-title">Detail Penjualan</h5>
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between">
+          <div>Total Nilai</div>
+          <div>Rp.{{number_format($totalNilai)}}</div>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <div>Total Ongkos Kirim</div>
+          <div>Rp.{{number_format($totalOngkir)}}</div>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <div>Total Diskon</div>
+          <div>Rp.{{number_format($totalDiskon)}}</div>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <div>Total Pajak</div>
+          <div>Rp.{{number_format($totalPajak)}}</div>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <div>Total Grand Total</div>
+          <div>Rp.{{number_format($totalGrandTotal)}}</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="card" x-show="itemToggle == 'table'">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped text-uppercase" id="data__table__penjualan">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th>Tanggal Jual</th>
+              <th>NO.Penjualan</th>
+              <th>Nama Pelanggan</th>
+              <th>Divisi</th>
+              <th>Sales</th>
+              <th>Ekspedisi</th>
+              <th>Bank</th>
+              <th>Grand Total</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 @endsection
 
