@@ -39,6 +39,9 @@
   </div>
   <div class="card" x-show="itemToggle == 'table'">
     <div class="card-body">
+      <div class="d-flex justify-content-end mb-4">
+        <a href="{{route('penjualan.choose.divisi')}}" class="btn btn-primary"><i class="far fa-plus-square mr-2"></i><span>Tambah Penjualan</span></a>
+      </div>
       <div class="table-responsive">
         <table class="table table-striped text-uppercase" id="data__table__penjualan">
           <thead>
@@ -46,13 +49,14 @@
               <th class="text-center">#</th>
               <th>Tanggal Jual</th>
               <th>NO.Penjualan</th>
-              <th>Nama Pelanggan</th>
+              <th>Penerima</th>
               <th>Divisi</th>
               <th>Sales</th>
               <th>Ekspedisi</th>
               <th>Bank</th>
               <th>Grand Total</th>
               <th>Status</th>
+              <th>Detail</th>
             </tr>
           </thead>
         </table>
@@ -62,12 +66,21 @@
 </div>
 @endsection
 
+@push('styles')
+<style>
+  table#data__table__penjualan {
+    width: -webkit-fill-available !important;
+  }
+</style>
+@endpush
+
 @push('scripts')
 <script>
   $(document).ready(() => {
     $("#data__table__penjualan").DataTable({
       processing: true,
       serverSide: true,
+      responsive: true,
       ajax: "{{route('dataTables.penjualan')}}",
       columns: [{
           data: "ID_penjualan",
@@ -115,6 +128,9 @@
           data: "status_lunas",
           name: "status",
           defaultContent: "Anonymous"
+        },
+        {
+          data: "detail_penjualan",
         }
       ],
     });

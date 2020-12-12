@@ -8,16 +8,22 @@
         </div>
         <ul class="sidebar-menu">
             <li class="menu-header">Dashboard</li>
-            <li class="nav-item dropdown {{request()->is('penjualan') ? 'active' : ''}}">
-                <a href="{{route('penjualan.index')}}" class="nav-link has-dropdown"><i class="fas fa-shopping-cart"></i><span>Penjualan</span></a>
+            <li>
+                <a class="nav-link" href="{{route('dashboard.index')}}"><i class="fas fa-pencil-ruler"></i> <span>Dashboard</span></a>
+            </li>
+            <li class="menu-header">Starter</li>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-shopping-cart"></i><span>Penjualan</span></a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a class="nav-link" href="index-0.html"><i class="far fa-chart-bar"></i><span>Semua Penjualan</span></a>
+                        <a class="nav-link" href="{{route('penjualan.index')}}"><i class="far fa-chart-bar"></i><span>Semua Penjualan</span></a>
                     </li>
-                    <li><a class="nav-link" href="index.html"><i class="fas fa-cart-plus"></i><span>Tambah Penjualan</span></a></li>
+                    <li>
+                        <a class="nav-link" href="{{route('penjualan.choose.divisi')}}"><i class="fas fa-cart-plus"></i><span>Tambah Penjualan</span></a>
+                    </li>
                 </ul>
             </li>
-            <li class="nav-item dropdown {{request()->is('master/pelanggan') ? 'active' : ''}}">
+            <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-align-justify"></i><span>Master</span></a>
                 <ul class="dropdown-menu">
                     <li class="{{request()->is('master/pelanggan') ? 'active' : ''}}">
@@ -27,10 +33,6 @@
                         <a class="nav-link" href="{{route('pelanggan.index')}}"><i class="fas fa-money-check-alt"></i><span>Bank</span></a>
                     </li>
                 </ul>
-            </li>
-            <li class="menu-header">Starter</li>
-            <li>
-                <a class="nav-link" href="credits.html"><i class="fas fa-pencil-ruler"></i> <span>Credits</span></a>
             </li>
         </ul>
 
