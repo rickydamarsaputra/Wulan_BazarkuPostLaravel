@@ -18,15 +18,18 @@
                     <li>
                         <a class="nav-link" href="{{route('penjualan.index')}}"><i class="far fa-chart-bar"></i><span>Semua Penjualan</span></a>
                     </li>
+                    @if(auth()->user()->role->nama_role != "Kasir")
                     <li>
                         <a class="nav-link" href="{{route('penjualan.choose.divisi')}}"><i class="fas fa-cart-plus"></i><span>Tambah Penjualan</span></a>
                     </li>
+                    @endif
                 </ul>
             </li>
+            @if(auth()->user()->role->nama_role != "Kasir")
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-align-justify"></i><span>Master</span></a>
                 <ul class="dropdown-menu">
-                    <li class="{{request()->is('master/pelanggan') ? 'active' : ''}}">
+                    <li>
                         <a class="nav-link" href="{{route('pelanggan.index')}}"><i class="fas fa-male"></i><span>Pelanggan</span></a>
                     </li>
                     <li>
@@ -34,6 +37,7 @@
                     </li>
                 </ul>
             </li>
+            @endif
         </ul>
 
         <div class="mt-4 mb-4 p-3 hide-sidebar-mini">

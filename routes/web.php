@@ -26,7 +26,7 @@ Route::get('/', function () {
 
 Route::prefix('/dashboard')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
-    Route::prefix('/master')->group(function () {
+    Route::prefix('/master')->middleware('admin')->group(function () {
         Route::prefix('/pelanggan')->group(function () {
             Route::get('/', [PelangganController::class, 'index'])->name('pelanggan.index');
         });
@@ -37,30 +37,22 @@ Route::prefix('/dashboard')->middleware('auth')->group(function () {
     Route::prefix('/penjualan')->group(function () {
         Route::get('/', [PenjualanController::class, 'index'])->name('penjualan.index');
         Route::get('/search/{idProduk}/{idPelanggan}', [PenjualanController::class, 'searchProduk'])->name('penjualan.produk.search');
-        Route::get('/choose', [PenjualanController::class, 'chooseDivisi'])->name('penjualan.choose.divisi');
+        Route::get('/choose', [PenjualanController::class, 'chooseDivisi'])->middleware('admin')->name('penjualan.choose.divisi');
         Route::match(['get', 'post'], '/create', [PenjualanController::class, 'create'])->name('penjualan.create');
         Route::post('/submit', [PenjualanController::class, 'submitPenjualan'])->name('penjualan.submit');
         Route::get('/detail/{nomorPenjualan}', [PenjualanController::class, 'detailPenjualan'])->name('penjualan.detail');
         Route::get('/print/{nomorPenjualan}', [PenjualanController::class, 'printInvoice'])->name('penjualan.print.invoice');
-        // Route::post('/create', [PenjualanController::class, 'create'])->name('penjualan.create');
     });
 });
 
 Route::prefix('/auth')->group(function () {
     Route::get('/login', [AuthController::class, 'loginView'])->name('login.view');
     Route::post('/login', [AuthController::class, 'loginProcess'])->name('login.process');
-    Route::get('/reset/password', function () {
-        $users = User::all();
-        foreach ($users as $user) {
-            $user->update([
-                "password" => bcrypt("bazarku")
-            ]);
-        }
-        return redirect('/');
-    });
     Route::get('/profile', [AuthController::class, 'profileUser'])->name('profile.user.view');
     Route::post('/change/password', [AuthController::class, 'changeUserPassword'])->name('change.user.password');
     Route::get('/generate', [AuthController::class, 'randomPassword'])->name('generate.password');
+    Route::get('/reset/password', [AuthController::class, 'resetPassword']);
+    Route::get('/logout', [AuthController::class, 'logoutUser'])->name('logout.user');
 });
 
 Route::get('/data_tables_penjualan', [PenjualanController::class, 'dataTablesPenjualan'])->name('dataTables.penjualan');

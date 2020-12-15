@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Controllers\PenjualanController;
-use App\Models\PenjualanDetail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -24,16 +24,24 @@ class AuthController extends Controller
             'username' => 'required',
             'password' => 'required'
         ]);
-        if (auth()->attempt($request->only(['username', 'password']))) {
+        if (Auth::attempt($request->only(['username', 'password']))) {
             if ($user->role->nama_role != "Kasir") {
                 return redirect()->route('dashboard.index');
             } else {
-                // return redirect()->route('penjualan.choose.divisi');
                 return redirect()->action([PenjualanController::class, 'create']);
             }
         } else {
             return "Gagal";
         }
+    }
+
+    public function logoutUser(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login.view');
     }
 
     public function profileUser()
@@ -66,5 +74,16 @@ class AuthController extends Controller
         return response()->json([
             "password" => $passwordRandom
         ]);
+    }
+
+    public function resetPassword()
+    {
+        $users = User::all();
+        foreach ($users as $user) {
+            $user->update([
+                "password" => bcrypt("bazarku")
+            ]);
+        }
+        return redirect('/');
     }
 }
