@@ -14,6 +14,9 @@ use App\Models\Bank;
 use App\Models\PenjualanDetail;
 use PDF;
 
+use DB;
+use DataTables;
+
 class PenjualanController extends Controller
 {
     public function index()
@@ -106,16 +109,16 @@ class PenjualanController extends Controller
             $penjualanDetailCounter++;
         }
 
-        $penerima = Pelanggan::create([
-            "nama_pelanggan" => $request->nama_penerima,
-            "alamat" => $request->alamat_penerima,
-            "email" => "-",
-            "no_telp" => $request->notel_penerima,
-            "ID_divisi" => $divisi->ID_divisi,
-            "tanggal_input" => date_format(Date::now(), "Y-m-d"),
-            "status_mitra" => 6,
-            "status" => 1
-        ]);
+        // $penerima = Pelanggan::create([
+        //     "nama_pelanggan" => $request->nama_penerima,
+        //     "alamat" => $request->alamat_penerima,
+        //     "email" => "-",
+        //     "no_telp" => $request->notel_penerima,
+        //     "ID_divisi" => $divisi->ID_divisi,
+        //     "tanggal_input" => date_format(Date::now(), "Y-m-d"),
+        //     "status_mitra" => 6,
+        //     "status" => 1
+        // ]);
 
         $penjualan = Penjualan::create([
             "nomor_penjualan" => $request->nomor_penjualan,
@@ -126,8 +129,11 @@ class PenjualanController extends Controller
             "ID_sales" => $request->id_sales,
             "ID_bank" => $request->id_bank,
             "ID_pelanggan" => $request->id_pelanggan,
-            "ID_penerima" => $penerima->ID_pelanggan,
+            "ID_penerima" => 0,
             "ID_ekspedisi" => $request->id_ekspedisi,
+            "nama_penerima" => $request->nama_penerima,
+            "telp_penerima" => $request->notel_penerima,
+            "alamat_penerima" => $request->alamat_penerima,
             "keterangan" => $request->keterangan,
             "berat" => $request->berat,
             "status_dropship" => $request->status_dropship != "on" ? 0 : 1,
@@ -197,9 +203,10 @@ class PenjualanController extends Controller
         ];
     }
 
-    public function dataTablesPenjualan()
+    public function datatables()
     {
-        return datatables()->of(Penjualan::with("pelanggan", "divisi", "sales", "ekspedisi", "bank")->select("penjualan.*"))
+        $query = Penjualan::with("penerima", "divisi", "sales", "ekspedisi", "bank")->select("penjualan.*");
+        return datatables()->of($query)
             ->editColumn('detail_penjualan', function ($penjual) {
                 return '<a class="btn btn-primary btn-sm" href="' . route('penjualan.detail', $penjual->nomor_penjualan) . '">detail</a>';
             })
@@ -226,7 +233,6 @@ class PenjualanController extends Controller
                 return $penjual->status != 0 ? "Lunas" : "Belum Lunas";
             })
             ->toJson();
-        // return datatables(Penjualan::select(["ID_penjualan", "nomor_penjualan"])->limit(10000)->get())->toJson();
     }
 
     public function detailPenjualan($nomorPenjualan)

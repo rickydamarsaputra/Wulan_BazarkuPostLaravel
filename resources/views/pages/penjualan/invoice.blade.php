@@ -110,8 +110,8 @@
   <div class="bazarku__wrapper__invoice">
     <div class="bazarku__invoice__section__one">
       <h4 class="bazarku__title">Penerima</h4>
-      <p>{{empty($penjualan->penerima->nama_pelanggan) ? "-" : $penjualan->penerima->nama_pelanggan}} - {{empty($penjualan->penerima->no_telp) ? "-" : $penjualan->penerima->no_telp}}</p>
-      <p>{{empty($penjualan->penerima->alamat) ? "-" : $penjualan->penerima->alamat}}</p>
+      <p>{{empty($penjualan->nama_penerima) ? "-" : $penjualan->nama_penerima}} - {{empty($penjualan->notelp_penerima) ? "-" : $penjualan->notelp_penerima}}</p>
+      <p>{{empty($penjualan->alamat_penerima) ? "-" : $penjualan->alamat_penerima}}</p>
     </div>
     <div class="bazarku__invoice__section__two">
       <h4 class="bazarku__title">Keterangan</h4>

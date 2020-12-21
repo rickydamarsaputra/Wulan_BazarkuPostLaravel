@@ -36,7 +36,6 @@ Route::prefix('/dashboard')->middleware('auth')->group(function () {
     });
     Route::prefix('/penjualan')->group(function () {
         Route::get('/', [PenjualanController::class, 'index'])->name('penjualan.index');
-        Route::get('/search/{idProduk}/{idPelanggan}', [PenjualanController::class, 'searchProduk'])->name('penjualan.produk.search');
         Route::get('/choose', [PenjualanController::class, 'chooseDivisi'])->middleware('admin')->name('penjualan.choose.divisi');
         Route::match(['get', 'post'], '/create', [PenjualanController::class, 'create'])->name('penjualan.create');
         Route::post('/submit', [PenjualanController::class, 'submitPenjualan'])->name('penjualan.submit');
@@ -55,4 +54,10 @@ Route::prefix('/auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logoutUser'])->name('logout.user');
 });
 
-Route::get('/data_tables_penjualan', [PenjualanController::class, 'dataTablesPenjualan'])->name('dataTables.penjualan');
+Route::prefix('helpers')->group(function () {
+    Route::get('/search/produk/{idProduk}/{idPelanggan}', [PenjualanController::class, 'searchProduk'])->name('helpers.search.produk');
+});
+
+Route::prefix('datatables')->group(function () {
+    Route::get('/penjualan', [PenjualanController::class, 'datatables'])->name('datatables.penjualan');
+});

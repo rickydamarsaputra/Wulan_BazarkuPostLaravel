@@ -382,7 +382,7 @@
                 text: 'Silahkan Pilih Produk!',
               });
             } else {
-              let requestURL = "{{route('penjualan.produk.search', [':idProduk', ':idPelanggan'])}}";
+              let requestURL = "{{route('helpers.search.produk', [':idProduk', ':idPelanggan'])}}";
               requestURL = requestURL.replace(":idProduk", idProduk);
               requestURL = requestURL.replace(":idPelanggan", idPelanggan);
               const {

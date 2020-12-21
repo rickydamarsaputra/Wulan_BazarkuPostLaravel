@@ -81,7 +81,7 @@
       processing: true,
       serverSide: true,
       responsive: true,
-      ajax: "{{route('dataTables.penjualan')}}",
+      ajax: "{{route('datatables.penjualan')}}",
       columns: [{
           data: "ID_penjualan",
           defaultContent: "Anonymous"
