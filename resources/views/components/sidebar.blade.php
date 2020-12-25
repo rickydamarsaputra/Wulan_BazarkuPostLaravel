@@ -38,6 +38,17 @@
                 </ul>
             </li>
             @endif
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-book"></i><span>Report</span></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="nav-link" href="{{route('report.laba.index')}}"><i class="fas fa-balance-scale"></i><span>L. Laba Rugi</span></a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{{route('pelanggan.index')}}"><i class="fas fa-money-check-alt"></i><span>Bank</span></a>
+                    </li>
+                </ul>
+            </li>
         </ul>
 
         <div class="mt-4 mb-4 p-3 hide-sidebar-mini">

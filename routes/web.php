@@ -6,7 +6,7 @@ use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\master\PelangganController;
 use App\Http\Controllers\master\BankController;
-
+use App\Http\Controllers\report\LabaController;
 use App\Models\User;
 
 /*
@@ -25,7 +25,9 @@ Route::get('/', function () {
 });
 
 Route::prefix('/dashboard')->middleware('auth')->group(function () {
+    // dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
+    // master
     Route::prefix('/master')->middleware('admin')->group(function () {
         Route::prefix('/pelanggan')->group(function () {
             Route::get('/', [PelangganController::class, 'index'])->name('pelanggan.index');
@@ -34,6 +36,7 @@ Route::prefix('/dashboard')->middleware('auth')->group(function () {
             Route::get('/', [BankController::class, 'index'])->name('bank.index');
         });
     });
+    // penjualan
     Route::prefix('/penjualan')->group(function () {
         Route::get('/', [PenjualanController::class, 'index'])->name('penjualan.index');
         Route::get('/choose', [PenjualanController::class, 'chooseDivisi'])->middleware('admin')->name('penjualan.choose.divisi');
@@ -41,6 +44,12 @@ Route::prefix('/dashboard')->middleware('auth')->group(function () {
         Route::post('/submit', [PenjualanController::class, 'submitPenjualan'])->name('penjualan.submit');
         Route::get('/detail/{nomorPenjualan}', [PenjualanController::class, 'detailPenjualan'])->name('penjualan.detail');
         Route::get('/print/{nomorPenjualan}', [PenjualanController::class, 'printInvoice'])->name('penjualan.print.invoice');
+    });
+    // report
+    Route::prefix('/report')->group(function () {
+        Route::prefix('/laba')->group(function () {
+            Route::get('/', [LabaController::class, 'index'])->name('report.laba.index');
+        });
     });
 });
 
@@ -54,8 +63,9 @@ Route::prefix('/auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logoutUser'])->name('logout.user');
 });
 
-Route::prefix('helpers')->group(function () {
+Route::prefix('/helpers')->group(function () {
     Route::get('/search/produk/{idProduk}/{idPelanggan}', [PenjualanController::class, 'searchProduk'])->name('helpers.search.produk');
+    Route::get('/laba/filter/{divisiId}/{salesId}/{dateRange}', [LabaController::class, 'filter'])->name('helpers.laba.filter');
 });
 
 Route::prefix('datatables')->group(function () {

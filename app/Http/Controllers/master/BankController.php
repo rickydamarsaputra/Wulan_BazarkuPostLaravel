@@ -9,6 +9,6 @@ class BankController extends Controller
 {
     public function index()
     {
-        return view('pages.bank.index');
+        return view('pages.master.bank.index');
     }
 }

@@ -65,6 +65,7 @@
   <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.3/dist/alpine.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <script src="{{asset('/assets/js/dataTables.bootstrap4.min.js')}}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous"></script>
   <script src="{{asset('/assets/js/select2.full.min.js')}}"></script>
   <script src="{{asset('/assets/js/daterangepicker.js')}}"></script>
   <!-- <script src="{{asset('/assets/js/jquery.dataTables.min.js')}}"></script> -->

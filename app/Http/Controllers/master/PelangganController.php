@@ -10,6 +10,6 @@ class PelangganController extends Controller
 {
     public function index()
     {
-        return view('pages.pelanggan.index');
+        return view('pages.master.pelanggan.index');
     }
 }
