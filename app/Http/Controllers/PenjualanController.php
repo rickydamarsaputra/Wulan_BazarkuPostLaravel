@@ -14,14 +14,13 @@ use App\Models\Bank;
 use App\Models\PenjualanDetail;
 use PDF;
 
-use DB;
 use DataTables;
 
 class PenjualanController extends Controller
 {
     public function index()
     {
-        $penjualan = Penjualan::limit(10)->get(["total", "ongkir", "diskon", "pajak", "grand_total"]);
+        $penjualan = Penjualan::get(["total", "ongkir", "diskon", "pajak", "grand_total"]);
         $totalNilai = 0;
         $totalOngkir = 0;
         $totalDiskon = 0;

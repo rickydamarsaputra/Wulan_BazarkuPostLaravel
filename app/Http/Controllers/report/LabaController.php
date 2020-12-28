@@ -28,9 +28,9 @@ class LabaController extends Controller
         $dateRangeExplode = explode(" ", $dateRange);
         $dateFirst = $dateRangeExplode[0];
         $dateLast = $dateRangeExplode[2];
-        $penjualan = Penjualan::whereIdDivisi($divisiId)->whereIdSales($salesId)->whereBetween("tanggal_input", [$dateFirst, $dateLast])->get(["pajak", "ongkir", "total", "diskon"]);
+        $penjualan = Penjualan::with(["penjualanDetail"])->whereIdDivisi($divisiId)->whereIdSales($salesId)->whereBetween("tanggal_input", [$dateFirst, $dateLast])->get(["nomor_penjualan", "pajak", "ongkir", "total", "diskon"]);
         $transaksiAkuntansi = TransaksiAkuntansi::whereIdDivisi($divisiId)->whereBetween("tanggal_transaksi", [$dateFirst, $dateLast])->get(["ID_perkiraan", "nominal"]);
-        $divisi = Divisi::findOrFail($divisiId);
+        $divisi = Divisi::findOrFail($divisiId, ["nama"]);
         $pajak = 0;
         $ongkir = 0;
         $totalPenjualan = 0;
@@ -50,7 +50,7 @@ class LabaController extends Controller
             $totalPenjualan += $loopItem->total;
             $diskon += $loopItem->diskon;
 
-            foreach ($loopItem->penjualanDetail as $loopItemDetail) {
+            foreach ($loopItem["penjualanDetail"] as $loopItemDetail) {
                 $hppPenjualan += $loopItemDetail->HPP;
             }
         }
