@@ -28,13 +28,13 @@ class LabaController extends Controller
         $dateRangeExplode = explode(" ", $dateRange);
         $dateFirst = $dateRangeExplode[0];
         $dateLast = $dateRangeExplode[2];
-        $penjualan = Penjualan::with(["penjualanDetail"])->whereIdDivisi($divisiId)->whereIdSales($salesId)->whereBetween("tanggal_input", [$dateFirst, $dateLast])->get();
-        $transaksiAkuntansi = TransaksiAkuntansi::whereIdDivisi($divisiId)->whereBetween("tanggal_transaksi", [$dateFirst, $dateLast])->get();
+        $penjualan = Penjualan::whereIdDivisi($divisiId)->whereIdSales($salesId)->whereBetween("tanggal_input", [$dateFirst, $dateLast])->get(["pajak", "ongkir", "total", "diskon"]);
+        $transaksiAkuntansi = TransaksiAkuntansi::whereIdDivisi($divisiId)->whereBetween("tanggal_transaksi", [$dateFirst, $dateLast])->get(["ID_perkiraan", "nominal"]);
         $divisi = Divisi::findOrFail($divisiId);
         $pajak = 0;
         $ongkir = 0;
         $totalPenjualan = 0;
-        $retur = Retur::whereBetween("tanggal_input", [$dateFirst, $dateLast])->whereJenisRetur(2)->get();
+        $retur = Retur::whereBetween("tanggal_input", [$dateFirst, $dateLast])->whereJenisRetur(2)->get(["nominal_retur", "HPP"]);
         $nominalRetur = 0;
         $pindahDanaKeluar = 0;
         $diskon = 0;
