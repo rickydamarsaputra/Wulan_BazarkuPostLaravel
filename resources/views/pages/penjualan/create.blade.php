@@ -105,7 +105,7 @@
         <div class="row">
           <div class="col-lg-4">
             <h6><i class="fas fa-paper-plane mr-2"></i><span>Penerima</span></h6>
-            <div class="form-group row mb-4" id="bazarku__nama__penerima__wrap">
+            <!-- <div class="form-group row mb-4" id="bazarku__nama__penerima__wrap">
               <label class="col-form-label text-left col-lg-3">Nama</label>
               <div class="col-lg">
                 <input type="text" class="form-control" id="bazarku__nama__penerima" name="nama_penerima" placeholder="Nama Penerima">
@@ -118,11 +118,11 @@
                 <input type="text" class="form-control" id="bazarku__notel__penerima" name="notel_penerima" placeholder="No.Telp Penerima">
                 <small class="form-text text-danger text-capitalize"></small>
               </div>
-            </div>
-            <div class="form-group row mb-4" id="bazarku__alamat__penerima__wrap">
-              <label class="col-form-label text-left col-lg-3">Alamat</label>
+            </div> -->
+            <div class="form-group row mb-4" id="bazarku__penerima__wrap">
+              <label class="col-form-label text-left col-lg-3 text-nowrap">Penerima</label>
               <div class="col-lg">
-                <textarea class="form-control" id="bazarku__alamat__penerima" name="alamat_penerima" placeholder="Alamat Penerima" style="height: 100px;"></textarea>
+                <textarea class="form-control" id="bazarku__penerima" name="penerima" placeholder="Nama - No. Telp - Alamat" style="height: 100px;"></textarea>
                 <small class="form-text text-danger text-capitalize"></small>
               </div>
             </div>
@@ -464,14 +464,14 @@
     $("#bazarku__diskon__pembayaran, #bazarku__pajak__pembayaran, #bazarku__ongkir__pembayaran").on("change", (e) => {
       handleCountTotalAndGrandTotalPenjualan();
     });
-    $(document).keyup((e) => {
-      const keyCode = (e.keyCode ? e.keyCode : e.which);
-      if (keyCode == 13) {
-        produkDetailAdd();
-        checkIfProdukItemIsEmpty();
-        return false;
-      }
-    });
+    // $(document).keyup((e) => {
+    //   const keyCode = (e.keyCode ? e.keyCode : e.which);
+    //   if (keyCode == 13) {
+    //     produkDetailAdd();
+    //     checkIfProdukItemIsEmpty();
+    //     return false;
+    //   }
+    // });
     $(".bazarku__delete__produk").each(() => {
       $(this).on("click", (e) => {
         if (e.target.classList[2] == "bazarku__delete__produk") {
@@ -522,9 +522,10 @@
     const checkAllFieldBeforeSubmit = ({
       sales,
       pelanggan,
-      namaPenerima,
-      notelPenerima,
-      alamatPenerima,
+      // namaPenerima,
+      // notelPenerima,
+      // alamatPenerima,
+      penerima,
       ekspedisi,
       ongkir,
       bank
@@ -544,20 +545,25 @@
       } else {
         $("#bazarku__ongkir__wrap").find(".text-danger").text("");
       }
-      if (!namaPenerima) {
-        $("#bazarku__nama__penerima__wrap").find(".text-danger").text(errorMessage("nama penerima"));
+      // if (!namaPenerima) {
+      //   $("#bazarku__nama__penerima__wrap").find(".text-danger").text(errorMessage("nama penerima"));
+      // } else {
+      //   $("#bazarku__nama__penerima__wrap").find(".text-danger").text("");
+      // }
+      // if (!notelPenerima) {
+      //   $("#bazarku__notel__penerima__wrap").find(".text-danger").text(errorMessage("no telp"));
+      // } else {
+      //   $("#bazarku__notel__penerima__wrap").find(".text-danger").text("");
+      // }
+      // if (!alamatPenerima) {
+      //   $("#bazarku__alamat__penerima__wrap").find(".text-danger").text(errorMessage("alamat"));
+      // } else {
+      //   $("#bazarku__alamat__penerima__wrap").find(".text-danger").text("");
+      // }
+      if (!penerima) {
+        $("#bazarku__penerima__wrap").find(".text-danger").text(errorMessage("penerima"));
       } else {
-        $("#bazarku__nama__penerima__wrap").find(".text-danger").text("");
-      }
-      if (!notelPenerima) {
-        $("#bazarku__notel__penerima__wrap").find(".text-danger").text(errorMessage("no telp"));
-      } else {
-        $("#bazarku__notel__penerima__wrap").find(".text-danger").text("");
-      }
-      if (!alamatPenerima) {
-        $("#bazarku__alamat__penerima__wrap").find(".text-danger").text(errorMessage("alamat"));
-      } else {
-        $("#bazarku__alamat__penerima__wrap").find(".text-danger").text("");
+        $("#bazarku__penerima__wrap").find(".text-danger").text("");
       }
       if (ekspedisi == "Pilih Ekspedisi") {
         $("#bazarku__choose__ekspedisi__wrap").find(".text-danger").text(errorMessage("ekspedisi"));
@@ -574,9 +580,10 @@
     $("#bazarku__form__penjualan").on("submit", (e) => {
       const sales = $("#bazarku__choose__sales").val();
       const pelanggan = $("#bazarku__choose__pelanggan").val();
-      const namaPenerima = $("#bazarku__nama__penerima").val();
-      const notelPenerima = $("#bazarku__notel__penerima").val();
-      const alamatPenerima = $("#bazarku__alamat__penerima").val();
+      // const namaPenerima = $("#bazarku__nama__penerima").val();
+      // const notelPenerima = $("#bazarku__notel__penerima").val();
+      // const alamatPenerima = $("#bazarku__alamat__penerima").val();
+      const penerima = $("#bazarku__penerima").val();
       const ekspedisi = $("#bazarku__choose__ekspedisi").val();
       const ongkir = $("#bazarku__ongkir__pembayaran").val();
       const bank = $("#bazarku__choose__bank").val();
@@ -584,16 +591,17 @@
       checkAllFieldBeforeSubmit({
         sales,
         pelanggan,
-        namaPenerima,
-        notelPenerima,
-        alamatPenerima,
+        // namaPenerima,
+        // notelPenerima,
+        // alamatPenerima,
+        penerima,
         ekspedisi,
         ongkir,
         bank
       });
 
       e.preventDefault();
-      if (sales != "Pilih Sales" && pelanggan != "Pilih Pelanggan" && ongkir != 0 && namaPenerima && notelPenerima && alamatPenerima && ekspedisi != "Pilih Ekspedisi" && bank != "Pilih Bank") {
+      if (sales != "Pilih Sales" && pelanggan != "Pilih Pelanggan" && ongkir != 0 && penerima && ekspedisi != "Pilih Ekspedisi" && bank != "Pilih Bank") {
         e.currentTarget.submit();
       } else {
         Swal.fire({

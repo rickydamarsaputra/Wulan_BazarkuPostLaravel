@@ -110,18 +110,13 @@
   <div class="bazarku__wrapper__invoice">
     <div class="bazarku__invoice__section__one">
       <h4 class="bazarku__title">Penerima</h4>
-      <p>{{empty($penjualan->nama_penerima) ? "-" : $penjualan->nama_penerima}} - {{empty($penjualan->notelp_penerima) ? "-" : $penjualan->notelp_penerima}}</p>
-      <p>{{empty($penjualan->alamat_penerima) ? "-" : $penjualan->alamat_penerima}}</p>
+      <p>{!! empty($penjualan->penerima) ? "-" : $penjualan->penerima !!}</p>
+      <!-- <p>{{empty($penjualan->nama_penerima) ? "-" : $penjualan->nama_penerima}} - {{empty($penjualan->notelp_penerima) ? "-" : $penjualan->notelp_penerima}}</p>
+      <p>{{empty($penjualan->alamat_penerima) ? "-" : $penjualan->alamat_penerima}}</p> -->
     </div>
     <div class="bazarku__invoice__section__two">
       <h4 class="bazarku__title">Keterangan</h4>
-      <p>
-        @if(empty($penjualan->keterangan))
-        -
-        @else
-        {{$penjualan->keterangan}}
-        @endif
-      </p>
+      <p>{{empty($penjualan->keterangan) ? "-" : $penjualan->keterangan}}</p>
       <h4 class="bazarku__title">
         Pengirim : <span>{{empty($penjualan->nama_pengirim_dropship) ? "-" : $penjualan->nama_pengirim_dropship}} - {{empty($penjualan->divisi->no_telp) ? "-" : $penjualan->divisi->no_telp}}</span>
       </h4>

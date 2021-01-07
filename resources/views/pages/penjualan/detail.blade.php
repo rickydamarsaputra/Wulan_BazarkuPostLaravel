@@ -49,9 +49,7 @@
       <div class="row">
         <div class="col-lg">
           <h6 class="title"><i class="fas fa-paper-plane mr-2"></i><span>Penerima</span></h6>
-          <h6>nama <span>{{$penjualan->penerima->nama_pelanggan}}</span></h6>
-          <h6>no. telp <span>{{$penjualan->penerima->no_telp}}</span></h6>
-          <h6>alamat <span>{{$penjualan->penerima->alamat}}</span></h6>
+          <h6>{!! empty($penjualan->penerima) ? "-" : $penjualan->penerima !!}</h6>
           <div class="bazarku__line__break"></div>
           <div>
             <div class="d-flex justify-content-between">

@@ -10,4 +10,7 @@ class Sales extends Model
     use HasFactory;
     protected $table = "sales";
     protected $primaryKey = "ID_sales";
+    public $incrementing = true;
+    public $timestamps = false;
+    protected $guarded = [];
 }

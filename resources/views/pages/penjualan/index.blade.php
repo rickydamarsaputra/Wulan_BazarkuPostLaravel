@@ -49,7 +49,7 @@
               <th class="text-center">#</th>
               <th>Tanggal Jual</th>
               <th>NO.Penjualan</th>
-              <th>Penerima</th>
+              <!-- <th>Penerima</th> -->
               <th>Divisi</th>
               <th>Sales</th>
               <th>Ekspedisi</th>
@@ -83,54 +83,53 @@
       responsive: true,
       ajax: "{{route('datatables.penjualan')}}",
       columns: [{
-          data: "ID_penjualan",
-          defaultContent: "Anonymous"
+          data: "DT_RowIndex",
+          orderable: false,
+          searchable: false
         },
         {
-          data: "tanggal_jual",
-          defaultContent: "Anonymous"
+          data: "tanggal_jual"
+        },
+        {
+          data: "nomor_penjualan"
+        },
+        {
+          data: "divisi.nama"
+        },
+        {
+          data: "sales.nama_sales",
+          defaultContent: "-"
+        },
+        {
+          data: "ekspedisi.nama_ekspedisi",
+          defaultContent: "-"
+        },
+        {
+          data: "bank.nama_bank",
+          defaultContent: "-"
+        },
+        {
+          data: "grand_total",
+          render: (data) => {
+            let reverse = data.toString().split('').reverse().join('');
+            ribuan = reverse.match(/\d{1,3}/g);
+            ribuan = ribuan.join('.').split('').reverse().join('');
+            return `Rp.${ribuan}`;
+          }
+        },
+        {
+          data: "status_pembayaran",
+          render: (data) => {
+            return data ? "Lunas" : "Belum Lunas";
+          }
         },
         {
           data: "nomor_penjualan",
-          defaultContent: "Anonymous"
-        },
-        {
-          data: "nama_pelanggan",
-          name: "pelanggan.nama_pelanggan",
-          defaultContent: "Anonymous"
-        },
-        {
-          data: "nama_divisi",
-          name: "divisi.nama",
-          defaultContent: "Anonymous"
-        },
-        {
-          data: "nama_sales",
-          name: "sales.nama_sales",
-          defaultContent: "Anonymous"
-        },
-        {
-          data: "nama_ekspedisi",
-          name: "ekspedisi.nama_ekspedisi",
-          defaultContent: "Anonymous"
-        },
-        {
-          data: "nama_bank",
-          name: "bank.nama_bank",
-          defaultContent: "Anonymous"
-        },
-        {
-          data: "grand_total_with_format",
-          name: "grand_total",
-          defaultContent: "Anonymous"
-        },
-        {
-          data: "status_lunas",
-          name: "status",
-          defaultContent: "Anonymous"
-        },
-        {
-          data: "detail_penjualan",
+          render: (data) => {
+            let requestURL = "{{route('penjualan.detail', ':nomorPenjualan')}}";
+            requestURL = requestURL.replace(":nomorPenjualan", data);
+            return `<a href="${requestURL}" class="btn btn-primary btn-sm">detail</a>`
+          }
         }
       ],
     });

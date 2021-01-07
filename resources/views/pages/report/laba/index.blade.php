@@ -12,7 +12,7 @@
         <label class="col-form-label text-md-right col-lg-1">Divisi</label>
         <div class="col-lg">
           <select class="form-control choose__divisi" id="bazarku__choose__divisi" name="divisi_id">
-            <option>Pilih Divisi</option>
+            <option>Semua Divisi</option>
             @foreach($divisi as $divi)
             <option value="{{$divi->ID_divisi}}">{{$divi->nama}}</option>
             @endforeach
@@ -24,7 +24,7 @@
         <label class="col-form-label text-md-right col-lg-1">Sales</label>
         <div class="col-lg">
           <select class="form-control choose__sales" id="bazarku__choose__sales" name="sales_id">
-            <option>Pilih Sales</option>
+            <option>Semua Sales</option>
             @foreach($sales as $sale)
             <option value="{{$sale->ID_sales}}">{{$sale->nama_sales}}</option>
             @endforeach
@@ -145,13 +145,15 @@
     $("#bazarku__laba__info").hide();
     $("#bazarku__form__filter__laba").on("submit", async (e) => {
       e.preventDefault();
-      const divisiId = $("#bazarku__choose__divisi").val();
-      const salesId = $("#bazarku__choose__sales").val();
+      const divisiId = $("#bazarku__choose__divisi").val() == "Semua Divisi" ? 0 : $("#bazarku__choose__divisi").val();
+      const salesId = $("#bazarku__choose__sales").val() == "Semua Sales" ? 0 : $("#bazarku__choose__sales").val();
       const dateRange = $("#date__range").val();
       let requestURL = "{{route('helpers.laba.filter', [':divisiId', ':salesId', ':dateRange'])}}";
       requestURL = requestURL.replace(":divisiId", divisiId);
       requestURL = requestURL.replace(":salesId", salesId);
       requestURL = requestURL.replace(":dateRange", dateRange);
+      // const response = await axios.get(requestURL);
+      // console.log(response.data);
       const {
         data: {
           divisi,

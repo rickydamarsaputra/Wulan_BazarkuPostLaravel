@@ -1,20 +1,20 @@
 @extends('layout.dashboard')
-@section('title', 'Pelanggan Page')
+@section('title', 'Supplier Page')
 
 @section('content')
 <div class="section-header text-capitalize d-flex justify-content-between">
   <h1>@yield('title')</h1>
-  <a href="{{route('pelanggan.create.view')}}" class="btn btn-primary">create pelanggan</a>
+  <a href="{{route('supplier.create.view')}}" class="btn btn-primary">create supplier</a>
 </div>
 
 <div class="card">
   <div class="card-body">
     <div class="table-responsive">
-      <table class="table table-striped" id="data__table__pelanggan">
+      <table class="table table-striped" id="data__table__supplier">
         <thead>
           <tr class="text-uppercase">
             <th class="text-center">#</th>
-            <th class="text-center">nama pelanggan</th>
+            <th class="text-center">nama</th>
             <th class="text-center">alamat</th>
             <th class="text-center">email</th>
             <th class="text-center">no telp</th>
@@ -31,17 +31,17 @@
 @push('scripts')
 <script>
   $(document).ready(() => {
-    $('#data__table__pelanggan').DataTable({
+    $('#data__table__supplier').DataTable({
       processing: true,
       serverSide: true,
-      ajax: "{{route('datatables.pelanggan')}}",
+      ajax: "{{route('datatables.supplier')}}",
       columns: [{
           data: 'DT_RowIndex',
           orderable: false,
           searchable: false
         },
         {
-          data: 'nama_pelanggan'
+          data: 'nama'
         },
         {
           data: 'alamat'
@@ -56,20 +56,25 @@
           data: 'tanggal_input'
         },
         {
-          data: 'ID_pelanggan',
+          data: 'ID_supplier',
           render: (data) => {
-            let deleteURL = "{{route('pelanggan.delete', ':pelangganId')}}";
-            deleteURL = deleteURL.replace(':pelangganId', data);
+            let updateURL = "{{route('supplier.update.view', ':supplierId')}}";
+            let deleteURL = "{{route('supplier.delete', ':supplierId')}}";
+            updateURL = updateURL.replace(':supplierId', data);
+            deleteURL = deleteURL.replace(':supplierId', data);
 
             return `
-              <form action="${deleteURL}" method="POST">
-                @csrf
-                @method('delete')
-                <button type="submit" class="btn btn-danger btn-sm text-capitalize">delete</button>
-              </form>
+              <div class="d-flex">
+                <a href="${updateURL}" class="btn btn-sm btn-success text-capitalize mr-2">update</a>
+                <form action="${deleteURL}" method="POST">
+                  @csrf
+                  @method('delete')
+                  <button type="submit" class="btn btn-sm btn-danger text-capitalize">delete</button>
+                </form>
+              </div>
             `;
           }
-        }
+        },
       ]
     });
   });

@@ -28,9 +28,21 @@ class LabaController extends Controller
         $dateRangeExplode = explode(" ", $dateRange);
         $dateFirst = $dateRangeExplode[0];
         $dateLast = $dateRangeExplode[2];
-        $penjualan = Penjualan::with(["penjualanDetail"])->whereIdDivisi($divisiId)->whereIdSales($salesId)->whereBetween("tanggal_input", [$dateFirst, $dateLast])->get(["nomor_penjualan", "pajak", "ongkir", "total", "diskon"]);
-        $transaksiAkuntansi = TransaksiAkuntansi::whereIdDivisi($divisiId)->whereBetween("tanggal_transaksi", [$dateFirst, $dateLast])->get(["ID_perkiraan", "nominal"]);
-        $divisi = Divisi::findOrFail($divisiId, ["nama"]);
+        if ($divisiId > 0 && $salesId > 0) {
+            $penjualan = Penjualan::with(["penjualanDetail"])->whereIdDivisi($divisiId)->whereIdSales($salesId)->whereBetween("tanggal_input", [$dateFirst, $dateLast])->get(["nomor_penjualan", "pajak", "ongkir", "total", "diskon"]);
+            $transaksiAkuntansi = TransaksiAkuntansi::whereIdDivisi($divisiId)->whereBetween("tanggal_transaksi", [$dateFirst, $dateLast])->get(["ID_perkiraan", "nominal"]);
+        } elseif ($divisiId > 0) {
+            $penjualan = Penjualan::with(["penjualanDetail"])->whereIdDivisi($divisiId)->whereBetween("tanggal_input", [$dateFirst, $dateLast])->get(["nomor_penjualan", "pajak", "ongkir", "total", "diskon"]);
+            $transaksiAkuntansi = TransaksiAkuntansi::whereIdDivisi($divisiId)->whereBetween("tanggal_transaksi", [$dateFirst, $dateLast])->get(["ID_perkiraan", "nominal"]);
+        } elseif ($salesId > 0) {
+            $penjualan = Penjualan::with(["penjualanDetail"])->whereIdSales($salesId)->whereBetween("tanggal_input", [$dateFirst, $dateLast])->get(["nomor_penjualan", "pajak", "ongkir", "total", "diskon"]);
+            $transaksiAkuntansi = TransaksiAkuntansi::whereBetween("tanggal_transaksi", [$dateFirst, $dateLast])->get(["ID_perkiraan", "nominal"]);
+        } else {
+            $penjualan = Penjualan::with(["penjualanDetail"])->whereBetween("tanggal_input", [$dateFirst, $dateLast])->get(["nomor_penjualan", "pajak", "ongkir", "total", "diskon"]);
+            $transaksiAkuntansi = TransaksiAkuntansi::whereBetween("tanggal_transaksi", [$dateFirst, $dateLast])->get(["ID_perkiraan", "nominal"]);
+        }
+
+        $divisi = Divisi::whereIdDivisi($divisiId)->first(["nama"]);
         $pajak = 0;
         $ongkir = 0;
         $totalPenjualan = 0;
@@ -74,7 +86,7 @@ class LabaController extends Controller
         $labaUsaha = $totalPendapatan - $totalBeban;
 
         return response()->json([
-            'divisi' => $divisi->nama,
+            'divisi' => empty($divisi->nama) ? "Semua Divisi" : $divisi->nama,
             'pajak' => number_format($pajak),
             'ongkir' => number_format($ongkir),
             'total_penjualan' => number_format($totalPenjualan),

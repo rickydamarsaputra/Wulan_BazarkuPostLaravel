@@ -1,21 +1,22 @@
 @extends('layout.dashboard')
-@section('title', 'Bank Page')
+@section('title', 'Perkiraan Akuntansi Page')
 
 @section('content')
 <div class="section-header text-capitalize d-flex justify-content-between">
   <h1>@yield('title')</h1>
-  <a href="{{route('bank.create.view')}}" class="btn btn-primary">create bank</a>
+  <a href="{{route('perkiraan.akuntansi.create.view')}}" class="btn btn-primary">create perkiraan akuntansi</a>
 </div>
 
 <div class="card">
   <div class="card-body">
     <div class="table-responsive">
-      <table class="table table-striped" id="data__table__bank">
+      <table class="table table-striped" id="data__table__perkiraan__akuntansi">
         <thead>
           <tr class="text-uppercase">
             <th class="text-center">#</th>
-            <th class="text-center">nama bank</th>
-            <th class="text-center">kategori bank</th>
+            <th class="text-center">kode akun</th>
+            <th class="text-center">nama akun</th>
+            <th class="text-center">tipe akun</th>
             <th class="text-center">tanggal input</th>
             <th class="text-center"></th>
           </tr>
@@ -29,35 +30,38 @@
 @push('scripts')
 <script>
   $(document).ready(() => {
-    $('#data__table__bank').DataTable({
+    $('#data__table__perkiraan__akuntansi').DataTable({
       processing: true,
       serverSide: true,
-      ajax: "{{route('datatables.bank')}}",
+      ajax: "{{route('datatables.perkiraan.akuntansi')}}",
       columns: [{
           data: 'DT_RowIndex',
           orderable: false,
           searchable: false
         },
         {
-          data: 'nama_bank'
+          data: 'kode_perkiraan'
         },
         {
-          data: 'kategori_bank',
+          data: 'nama_akun'
+        },
+        {
+          data: 'tipe_akun',
           render: (data) => {
-            const status = data == 1 ? 'cash' : data == 2 ? 'pending in' : 'pending out';
-            return status.toUpperCase();
+            const message = data == 1 ? 'Pemasukan' : 'Pengeluaran';
+            return message;
           }
         },
         {
           data: 'tanggal_input'
         },
         {
-          data: 'ID_bank',
+          data: 'ID_perkiraan',
           render: (data) => {
-            let updateURL = "{{route('bank.update.view', ':bankId')}}";
-            let deleteURL = "{{route('bank.delete', ':bankId')}}";
-            updateURL = updateURL.replace(':bankId', data);
-            deleteURL = deleteURL.replace(':bankId', data);
+            let updateURL = "{{route('perkiraan.akuntansi.update.view', ':perkiraanId')}}";
+            let deleteURL = "{{route('perkiraan.akuntansi.delete', ':perkiraanId')}}";
+            updateURL = updateURL.replace(':perkiraanId', data);
+            deleteURL = deleteURL.replace(':perkiraanId', data);
 
             return `
               <div class="d-flex">
@@ -75,12 +79,4 @@
     });
   });
 </script>
-@endpush
-
-@push('styles')
-<style>
-  table#data__table__bank {
-    width: -webkit-fill-available !important;
-  }
-</style>
 @endpush

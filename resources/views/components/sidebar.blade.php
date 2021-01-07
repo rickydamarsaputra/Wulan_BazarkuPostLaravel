@@ -30,10 +30,25 @@
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-align-justify"></i><span>Master</span></a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a class="nav-link" href="{{route('pelanggan.index')}}"><i class="fas fa-male"></i><span>Pelanggan</span></a>
+                        <a class="nav-link" href="{{route('bank.index')}}"><i class="fas fa-money-check-alt"></i><span>Bank</span></a>
                     </li>
                     <li>
-                        <a class="nav-link" href="{{route('pelanggan.index')}}"><i class="fas fa-money-check-alt"></i><span>Bank</span></a>
+                        <a class="nav-link" href="{{route('divisi.index')}}"><i class="fas fa-user-md"></i><span>Divisi</span></a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{{route('sales.index')}}"><i class="fas fa-comments-dollar"></i><span>Sales</span></a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{{route('ekspedisi.index')}}"><i class="fas fa-shipping-fast"></i><span>Ekspedisi</span></a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{{route('perkiraan.akuntansi.index')}}"><i class="fas fa-sort-amount-up-alt"></i><span>Perkiraan Akuntansi</span></a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{{route('supplier.index')}}"><i class="fas fa-user-tag"></i><span>Supplier</span></a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{{route('pelanggan.index')}}"><i class="fas fa-male"></i><span>Pelanggan</span></a>
                     </li>
                 </ul>
             </li>
@@ -42,10 +57,19 @@
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-book"></i><span>Report</span></a>
                 <ul class="dropdown-menu">
                     <li>
+                        <a class="nav-link" href="{{route('report.stok-produk.index')}}"><i class="fas fa-cubes"></i><span>A. Stok Produk</span></a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{{route('report.pembelian.index')}}"><i class="fas fa-cart-arrow-down"></i><span>D. Pembelian</span></a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{{route('report.retur-penjualan.index')}}"><i class="fas fa-undo"></i><span>F. Retur Penjualan</span></a>
+                    </li>
+                    <li>
                         <a class="nav-link" href="{{route('report.laba.index')}}"><i class="fas fa-balance-scale"></i><span>L. Laba Rugi</span></a>
                     </li>
                     <li>
-                        <a class="nav-link" href="{{route('pelanggan.index')}}"><i class="fas fa-money-check-alt"></i><span>Bank</span></a>
+                        <a class="nav-link" href="{{route('report.stok-produk-lengkap.index')}}"><i class="fas fa-box-open"></i><span class="text-nowrap">W. Stok Produk Lengkap</span></a>
                     </li>
                 </ul>
             </li>

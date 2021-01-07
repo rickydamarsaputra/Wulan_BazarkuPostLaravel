@@ -6,7 +6,17 @@ use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\master\PelangganController;
 use App\Http\Controllers\master\BankController;
+use App\Http\Controllers\master\DivisiController;
+use App\Http\Controllers\master\EkspedisiController;
+use App\Http\Controllers\master\PerkiraanAkuntansiController;
+use App\Http\Controllers\master\SalesController;
+use App\Http\Controllers\master\SupplierController;
 use App\Http\Controllers\report\LabaController;
+use App\Http\Controllers\report\PembelianController;
+use App\Http\Controllers\report\ReturPenjualanController;
+use App\Http\Controllers\report\StokProdukController;
+use App\Http\Controllers\report\StokProdukLengkapController;
+use App\Models\Role;
 use App\Models\User;
 
 /*
@@ -29,13 +39,68 @@ Route::prefix('/dashboard')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
     // master
     Route::prefix('/master')->middleware('admin')->group(function () {
-        Route::prefix('/pelanggan')->group(function () {
-            Route::get('/', [PelangganController::class, 'index'])->name('pelanggan.index');
-        });
-        Route::prefix('/bank')->group(function () {
+        Route::prefix('bank')->group(function () {
             Route::get('/', [BankController::class, 'index'])->name('bank.index');
+            Route::get('/create', [BankController::class, 'createView'])->name('bank.create.view');
+            Route::post('/create', [BankController::class, 'createProcess'])->name('bank.create.process');
+            Route::get('/update/{bankId}', [BankController::class, 'updateView'])->name('bank.update.view');
+            Route::put('/update/{bankId}', [BankController::class, 'updateProcess'])->name('bank.update.process');
+            Route::delete('/delete/{bankId}', [BankController::class, 'delete'])->name('bank.delete');
+        });
+
+        Route::prefix('divisi')->group(function () {
+            Route::get('/', [DivisiController::class, 'index'])->name('divisi.index');
+            Route::get('/create', [DivisiController::class, 'createView'])->name('divisi.create.view');
+            Route::post('/create', [DivisiController::class, 'createProcess'])->name('divisi.create.process');
+            Route::get('/update/{divisiId}', [DivisiController::class, 'updateView'])->name('divisi.update.view');
+            Route::put('/update/{divisiId}', [DivisiController::class, 'updateProcess'])->name('divisi.update.process');
+            Route::delete('/delete/{divisiId}', [DivisiController::class, 'delete'])->name('divisi.delete');
+        });
+
+        Route::prefix('sales')->group(function () {
+            Route::get('/', [SalesController::class, 'index'])->name('sales.index');
+            Route::get('/create', [SalesController::class, 'createView'])->name('sales.create.view');
+            Route::post('/create', [SalesController::class, 'createProcess'])->name('sales.create.process');
+            Route::get('/update/{salesId}', [SalesController::class, 'updateView'])->name('sales.update.view');
+            Route::put('/update/{salesId}', [SalesController::class, 'updateProcess'])->name('sales.update.process');
+            Route::delete('/delete/{salesId}', [SalesController::class, 'delete'])->name('sales.delete');
+        });
+
+        Route::prefix('ekspedisi')->group(function () {
+            Route::get('/', [EkspedisiController::class, 'index'])->name('ekspedisi.index');
+            Route::get('/create', [EkspedisiController::class, 'createView'])->name('ekspedisi.create.view');
+            Route::post('/create', [EkspedisiController::class, 'createProcess'])->name('ekspedisi.create.process');
+            Route::get('/update/{ekspedisiId}', [EkspedisiController::class, 'updateView'])->name('ekspedisi.update.view');
+            Route::put('/update/{ekspedisiId}', [EkspedisiController::class, 'updateProcess'])->name('ekspedisi.update.process');
+            Route::delete('/delete/{ekspedisiId}', [EkspedisiController::class, 'delete'])->name('ekspedisi.delete');
+        });
+
+        Route::prefix('perkiraan-akuntansi')->group(function () {
+            Route::get('/', [PerkiraanAkuntansiController::class, 'index'])->name('perkiraan.akuntansi.index');
+            Route::get('/create', [PerkiraanAkuntansiController::class, 'createView'])->name('perkiraan.akuntansi.create.view');
+            Route::post('/create', [PerkiraanAkuntansiController::class, 'createProcess'])->name('perkiraan.akuntansi.create.process');
+            Route::get('/update/{perkiraanId}', [PerkiraanAkuntansiController::class, 'updateView'])->name('perkiraan.akuntansi.update.view');
+            Route::put('/update/{perkiraanId}', [PerkiraanAkuntansiController::class, 'updateProcess'])->name('perkiraan.akuntansi.update.process');
+            Route::delete('/delete/{perkiraanId}', [PerkiraanAkuntansiController::class, 'delete'])->name('perkiraan.akuntansi.delete');
+        });
+
+        Route::prefix('supplier')->group(function () {
+            Route::get('/', [SupplierController::class, 'index'])->name('supplier.index');
+            Route::get('/create', [SupplierController::class, 'createView'])->name('supplier.create.view');
+            Route::post('/create', [SupplierController::class, 'createProcess'])->name('supplier.create.process');
+            Route::get('/update/{supplierId}', [SupplierController::class, 'updateView'])->name('supplier.update.view');
+            Route::put('/update/{supplierId}', [SupplierController::class, 'updateProcess'])->name('supplier.update.process');
+            Route::delete('/delete/{supplierId}', [SupplierController::class, 'delete'])->name('supplier.delete');
+        });
+
+        Route::prefix('pelanggan')->group(function () {
+            Route::get('/', [PelangganController::class, 'index'])->name('pelanggan.index');
+            Route::get('/create', [PelangganController::class, 'createView'])->name('pelanggan.create.view');
+            Route::post('/create', [PelangganController::class, 'createProcess'])->name('pelanggan.create.process');
+            Route::delete('/delete/{pelangganId}', [PelangganController::class, 'delete'])->name('pelanggan.delete');
         });
     });
+
     // penjualan
     Route::prefix('/penjualan')->group(function () {
         Route::get('/', [PenjualanController::class, 'index'])->name('penjualan.index');
@@ -45,10 +110,23 @@ Route::prefix('/dashboard')->middleware('auth')->group(function () {
         Route::get('/detail/{nomorPenjualan}', [PenjualanController::class, 'detailPenjualan'])->name('penjualan.detail');
         Route::get('/print/{nomorPenjualan}', [PenjualanController::class, 'printInvoice'])->name('penjualan.print.invoice');
     });
+
     // report
     Route::prefix('/report')->group(function () {
+        Route::prefix('/stok-produk')->group(function () {
+            Route::get('/', [StokProdukController::class, 'index'])->name('report.stok-produk.index');
+        });
+        Route::prefix('/pembelian')->group(function () {
+            Route::get('/', [PembelianController::class, 'index'])->name('report.pembelian.index');
+        });
+        Route::prefix('/retur-penjualan')->group(function () {
+            Route::get('/', [ReturPenjualanController::class, 'index'])->name('report.retur-penjualan.index');
+        });
         Route::prefix('/laba')->group(function () {
             Route::get('/', [LabaController::class, 'index'])->name('report.laba.index');
+        });
+        Route::prefix('/stok-produk-lengkap')->group(function () {
+            Route::get('/', [StokProdukLengkapController::class, 'index'])->name('report.stok-produk-lengkap.index');
         });
     });
 });
@@ -66,8 +144,26 @@ Route::prefix('/auth')->group(function () {
 Route::prefix('/helpers')->group(function () {
     Route::get('/search/produk/{idProduk}/{idPelanggan}', [PenjualanController::class, 'searchProduk'])->name('helpers.search.produk');
     Route::get('/laba/filter/{divisiId}/{salesId}/{dateRange}', [LabaController::class, 'filter'])->name('helpers.laba.filter');
+    Route::get('/pembelian/{supplierId}/{divisiId}/{bankId}/{status}/{dateRange}', [PembelianController::class, 'countPembelianInfo'])->name('helpers.pembelian.count');
 });
 
 Route::prefix('datatables')->group(function () {
     Route::get('/penjualan', [PenjualanController::class, 'datatables'])->name('datatables.penjualan');
+
+    Route::prefix('report')->group(function () {
+        Route::get('/pembelian/{supplierId}/{divisiId}/{bankId}/{status}/{dateRange}/{sortBy}/{sort}', [PembelianController::class, 'datatables'])->name('datatables.pembelian');
+        Route::get('/stok-produk/{divisiId}/{sortBy}/{sort}', [StokProdukController::class, 'datatables'])->name('datatables.stok-produk');
+        Route::get('/retur-penjualan/{dateRange}/{sortBy}/{sort}', [ReturPenjualanController::class, 'datatables'])->name('datatables.retur-penjualan');
+        Route::get('/stok-produk-lengkap/{divisiId}/{sortBy}/{sort}', [StokProdukLengkapController::class, 'datatables'])->name('datatables.stok-produk-lengkap');
+    });
+
+    Route::prefix('master')->group(function () {
+        Route::get('/bank', [BankController::class, 'datatables'])->name('datatables.bank');
+        Route::get('/divisi', [DivisiController::class, 'datatables'])->name('datatables.divisi');
+        Route::get('/sales', [SalesController::class, 'datatables'])->name('datatables.sales');
+        Route::get('/ekspedisi', [EkspedisiController::class, 'datatables'])->name('datatables.ekspedisi');
+        Route::get('/perkiraan-akuntansi', [PerkiraanAkuntansiController::class, 'datatables'])->name('datatables.perkiraan.akuntansi');
+        Route::get('/supplier', [SupplierController::class, 'datatables'])->name('datatables.supplier');
+        Route::get('/pelanggan', [PelangganController::class, 'datatables'])->name('datatables.pelanggan');
+    });
 });

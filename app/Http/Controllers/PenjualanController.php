@@ -132,9 +132,10 @@ class PenjualanController extends Controller
             "ID_pelanggan" => $request->id_pelanggan,
             "ID_penerima" => 0,
             "ID_ekspedisi" => $request->id_ekspedisi,
-            "nama_penerima" => $request->nama_penerima,
-            "telp_penerima" => $request->notel_penerima,
-            "alamat_penerima" => $request->alamat_penerima,
+            // "nama_penerima" => $request->nama_penerima,
+            // "telp_penerima" => $request->notel_penerima,
+            // "alamat_penerima" => $request->alamat_penerima,
+            "penerima" => nl2br($request->penerima),
             "keterangan" => $request->keterangan,
             "berat" => $request->berat,
             "status_dropship" => $request->status_dropship != "on" ? 0 : 1,
@@ -207,32 +208,33 @@ class PenjualanController extends Controller
     public function datatables()
     {
         $query = Penjualan::with("penerima", "divisi", "sales", "ekspedisi", "bank")->select("penjualan.*");
-        return datatables()->of($query)
-            ->editColumn('detail_penjualan', function ($penjual) {
-                return '<a class="btn btn-primary btn-sm" href="' . route('penjualan.detail', $penjual->nomor_penjualan) . '">detail</a>';
-            })
-            ->rawColumns(['detail_penjualan'])
-            ->addColumn('nama_pelanggan', function ($penjual) {
-                return $penjual->pelanggan ? $penjual->pelanggan->nama_pelanggan : "Anonymous";
-            })
-            ->addColumn('nama_divisi', function ($penjual) {
-                return $penjual->divisi->nama;
-            })
-            ->addColumn('nama_sales', function ($penjual) {
-                return $penjual->sales ? $penjual->sales->nama_sales : "Anonymous";
-            })
-            ->addColumn('nama_ekspedisi', function ($penjual) {
-                return $penjual->ekspedisi ? $penjual->ekspedisi->nama_ekspedisi : "Anonymous";
-            })
-            ->addColumn('nama_bank', function ($penjual) {
-                return $penjual->bank ? $penjual->bank->nama_bank : "Anonymous";
-            })
-            ->addColumn('grand_total_with_format', function ($penjual) {
-                return "Rp. " . number_format($penjual->grand_total);
-            })
-            ->addColumn('status_lunas', function ($penjual) {
-                return $penjual->status != 0 ? "Lunas" : "Belum Lunas";
-            })
+        return DataTables::of($query)
+            ->addIndexColumn()
+            // ->editColumn('detail_penjualan', function ($penjual) {
+            //     return '<a class="btn btn-primary btn-sm" href="' . route('penjualan.detail', $penjual->nomor_penjualan) . '">detail</a>';
+            // })
+            // ->rawColumns(['detail_penjualan'])
+            // ->addColumn('nama_pelanggan', function ($penjual) {
+            //     return $penjual->pelanggan ? $penjual->pelanggan->nama_pelanggan : "Anonymous";
+            // })
+            // ->addColumn('nama_divisi', function ($penjual) {
+            //     return $penjual->divisi->nama;
+            // })
+            // ->addColumn('nama_sales', function ($penjual) {
+            //     return $penjual->sales ? $penjual->sales->nama_sales : "Anonymous";
+            // })
+            // ->addColumn('nama_ekspedisi', function ($penjual) {
+            //     return $penjual->ekspedisi ? $penjual->ekspedisi->nama_ekspedisi : "Anonymous";
+            // })
+            // ->addColumn('nama_bank', function ($penjual) {
+            //     return $penjual->bank ? $penjual->bank->nama_bank : "Anonymous";
+            // })
+            // ->addColumn('grand_total_with_format', function ($penjual) {
+            //     return "Rp. " . number_format($penjual->grand_total);
+            // })
+            // ->addColumn('status_lunas', function ($penjual) {
+            //     return $penjual->status != 0 ? "Lunas" : "Belum Lunas";
+            // })
             ->toJson();
     }
 
@@ -247,6 +249,7 @@ class PenjualanController extends Controller
     public function printInvoice($nomorPenjualan)
     {
         $penjualan = Penjualan::whereNomorPenjualan($nomorPenjualan)->with(["pelanggan", "penerima", "divisi", "sales", "ekspedisi", "bank", "penjualanDetail"])->firstOrFail();
+        // $penerimaExplode = $penjualan->penerima;
         $pdf = PDF::loadView("pages.penjualan.invoice", [
             "penjualan" => $penjualan
         ]);

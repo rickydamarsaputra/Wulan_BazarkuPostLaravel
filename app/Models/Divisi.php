@@ -11,6 +11,9 @@ class Divisi extends Model
     use HasFactory;
     protected $table = "divisi";
     protected $primaryKey = "ID_divisi";
+    protected $guarded = ["ID_divisi"];
+    public $incrementing = true;
+    public $timestamps = false;
 
     public function produk()
     {
