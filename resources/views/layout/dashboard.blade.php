@@ -20,6 +20,16 @@
   <link rel="stylesheet" href="{{asset('/assets/css/style.css')}}">
   <link rel="stylesheet" href="{{asset('/assets/css/components.css')}}">
 
+  <!-- Default Style -->
+  <style>
+    .main-sidebar .sidebar-menu li ul.dropdown-menu li a {
+      color: #868e96;
+      height: 35px;
+      padding-left: 40px !important;
+      font-weight: 400;
+    }
+  </style>
+
   <!-- Laravel Styles Stack -->
   @stack('styles')
 </head>

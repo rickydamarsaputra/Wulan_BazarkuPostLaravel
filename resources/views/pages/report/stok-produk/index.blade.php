@@ -70,6 +70,7 @@
 @push('scripts')
 <script>
   $(document).ready(() => {
+    $("select").select2();
     $('#bazarku__stok__barang__info').hide();
 
     $('#bazarku__form__filter__stok__barang').on('submit', (e) => {

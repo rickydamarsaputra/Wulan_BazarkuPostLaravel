@@ -137,6 +137,7 @@
 @push('scripts')
 <script>
   $(document).ready(() => {
+    $("select").select2();
     $('.daterange-cus').daterangepicker({
       locale: {
         format: 'YYYY-MM-DD'
@@ -156,7 +157,7 @@
       const sortBy = $('#bazarku__choose__sort__by').val();
       const sort = $('#bazarku__choose__sort__asc__or__desc').val();
 
-      let requestURL = "{{route('datatables.pembelian', [':supplierId', ':divisiId', ':bankId', ':status', ':dateRange', ':sortBy', ':sort'])}}"
+      let requestURL = "{{route('datatables.pembelian', [':supplierId', ':divisiId', ':bankId', ':status', ':dateRange', ':sortBy', ':sort'])}}";
       requestURL = requestURL.replace(':supplierId', supplierId);
       requestURL = requestURL.replace(':divisiId', divisiId);
       requestURL = requestURL.replace(':bankId', bankId);

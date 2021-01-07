@@ -52,3 +52,11 @@
   </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+  $(document).ready(() => {
+    $("select").select2();
+  });
+</script>
+@endpush

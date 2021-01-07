@@ -70,6 +70,7 @@
 @push('scripts')
 <script>
   $(document).ready(() => {
+    $("select").select2();
     $('.daterange-cus').daterangepicker({
       locale: {
         format: 'YYYY-MM-DD'

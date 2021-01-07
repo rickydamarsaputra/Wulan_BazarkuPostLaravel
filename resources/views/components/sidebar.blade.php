@@ -63,10 +63,16 @@
                         <a class="nav-link" href="{{route('report.pembelian.index')}}"><i class="fas fa-cart-arrow-down"></i><span>D. Pembelian</span></a>
                     </li>
                     <li>
+                        <a class="nav-link" href="{{route('report.penjualan.index')}}"><i class="fas fa-cart-arrow-down"></i><span>E. Penjualan</span></a>
+                    </li>
+                    <li>
                         <a class="nav-link" href="{{route('report.retur-penjualan.index')}}"><i class="fas fa-undo"></i><span>F. Retur Penjualan</span></a>
                     </li>
                     <li>
                         <a class="nav-link" href="{{route('report.laba.index')}}"><i class="fas fa-balance-scale"></i><span>L. Laba Rugi</span></a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{{route('report.produk.terlaris.index')}}"><i class="fab fa-dropbox"></i><span class="text-nowrap">H. Produk Terlaris</span></a>
                     </li>
                     <li>
                         <a class="nav-link" href="{{route('report.stok-produk-lengkap.index')}}"><i class="fas fa-box-open"></i><span class="text-nowrap">W. Stok Produk Lengkap</span></a>

@@ -13,6 +13,8 @@ use App\Http\Controllers\master\SalesController;
 use App\Http\Controllers\master\SupplierController;
 use App\Http\Controllers\report\LabaController;
 use App\Http\Controllers\report\PembelianController;
+use App\Http\Controllers\report\PenjualanController as ReportPenjualanController;
+use App\Http\Controllers\report\ProdukTerlarisController;
 use App\Http\Controllers\report\ReturPenjualanController;
 use App\Http\Controllers\report\StokProdukController;
 use App\Http\Controllers\report\StokProdukLengkapController;
@@ -34,11 +36,11 @@ Route::get('/', function () {
     return redirect()->route('login.view');
 });
 
-Route::prefix('/dashboard')->middleware('auth')->group(function () {
+Route::prefix('dashboard')->middleware('auth')->group(function () {
     // dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
     // master
-    Route::prefix('/master')->middleware('admin')->group(function () {
+    Route::prefix('master')->middleware('admin')->group(function () {
         Route::prefix('bank')->group(function () {
             Route::get('/', [BankController::class, 'index'])->name('bank.index');
             Route::get('/create', [BankController::class, 'createView'])->name('bank.create.view');
@@ -102,7 +104,7 @@ Route::prefix('/dashboard')->middleware('auth')->group(function () {
     });
 
     // penjualan
-    Route::prefix('/penjualan')->group(function () {
+    Route::prefix('penjualan')->group(function () {
         Route::get('/', [PenjualanController::class, 'index'])->name('penjualan.index');
         Route::get('/choose', [PenjualanController::class, 'chooseDivisi'])->middleware('admin')->name('penjualan.choose.divisi');
         Route::match(['get', 'post'], '/create', [PenjualanController::class, 'create'])->name('penjualan.create');
@@ -112,26 +114,38 @@ Route::prefix('/dashboard')->middleware('auth')->group(function () {
     });
 
     // report
-    Route::prefix('/report')->group(function () {
-        Route::prefix('/stok-produk')->group(function () {
+    Route::prefix('report')->group(function () {
+        Route::prefix('stok-produk')->group(function () {
             Route::get('/', [StokProdukController::class, 'index'])->name('report.stok-produk.index');
         });
-        Route::prefix('/pembelian')->group(function () {
+
+        Route::prefix('pembelian')->group(function () {
             Route::get('/', [PembelianController::class, 'index'])->name('report.pembelian.index');
         });
-        Route::prefix('/retur-penjualan')->group(function () {
+
+        Route::prefix('penjualan')->group(function () {
+            Route::get('/', [ReportPenjualanController::class, 'index'])->name('report.penjualan.index');
+        });
+
+        Route::prefix('retur-penjualan')->group(function () {
             Route::get('/', [ReturPenjualanController::class, 'index'])->name('report.retur-penjualan.index');
         });
-        Route::prefix('/laba')->group(function () {
+
+        Route::prefix('laba')->group(function () {
             Route::get('/', [LabaController::class, 'index'])->name('report.laba.index');
         });
-        Route::prefix('/stok-produk-lengkap')->group(function () {
+
+        Route::prefix('produk-terlaris')->group(function () {
+            Route::get('/', [ProdukTerlarisController::class, 'index'])->name('report.produk.terlaris.index');
+        });
+
+        Route::prefix('stok-produk-lengkap')->group(function () {
             Route::get('/', [StokProdukLengkapController::class, 'index'])->name('report.stok-produk-lengkap.index');
         });
     });
 });
 
-Route::prefix('/auth')->group(function () {
+Route::prefix('auth')->group(function () {
     Route::get('/login', [AuthController::class, 'loginView'])->name('login.view');
     Route::post('/login', [AuthController::class, 'loginProcess'])->name('login.process');
     Route::get('/profile', [AuthController::class, 'profileUser'])->name('profile.user.view');
@@ -141,10 +155,11 @@ Route::prefix('/auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logoutUser'])->name('logout.user');
 });
 
-Route::prefix('/helpers')->group(function () {
+Route::prefix('helpers')->group(function () {
     Route::get('/search/produk/{idProduk}/{idPelanggan}', [PenjualanController::class, 'searchProduk'])->name('helpers.search.produk');
     Route::get('/laba/filter/{divisiId}/{salesId}/{dateRange}', [LabaController::class, 'filter'])->name('helpers.laba.filter');
     Route::get('/pembelian/{supplierId}/{divisiId}/{bankId}/{status}/{dateRange}', [PembelianController::class, 'countPembelianInfo'])->name('helpers.pembelian.count');
+    Route::get('/penjualan/{pelangganId}/{divisiId}/{salesId}/{ekspedisiId}/{bankId}/{status}/{dateRange}', [ReportPenjualanController::class, 'countPenjualanInfo'])->name('helpers.penjualan.count');
 });
 
 Route::prefix('datatables')->group(function () {
@@ -153,8 +168,10 @@ Route::prefix('datatables')->group(function () {
     Route::prefix('report')->group(function () {
         Route::get('/pembelian/{supplierId}/{divisiId}/{bankId}/{status}/{dateRange}/{sortBy}/{sort}', [PembelianController::class, 'datatables'])->name('datatables.pembelian');
         Route::get('/stok-produk/{divisiId}/{sortBy}/{sort}', [StokProdukController::class, 'datatables'])->name('datatables.stok-produk');
+        Route::get('/produk-terlaris/{divisiId}/{dateRange}', [ProdukTerlarisController::class, 'datatables'])->name('datatables.produk.terlaris');
         Route::get('/retur-penjualan/{dateRange}/{sortBy}/{sort}', [ReturPenjualanController::class, 'datatables'])->name('datatables.retur-penjualan');
         Route::get('/stok-produk-lengkap/{divisiId}/{sortBy}/{sort}', [StokProdukLengkapController::class, 'datatables'])->name('datatables.stok-produk-lengkap');
+        Route::get('/penjualan/{pelangganId}/{divisiId}/{salesId}/{ekspedisiId}/{bankId}/{status}/{dateRange}', [ReportPenjualanController::class, 'datatables'])->name('datatables.report.penjualan');
     });
 
     Route::prefix('master')->group(function () {
