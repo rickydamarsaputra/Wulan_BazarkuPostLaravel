@@ -1,9 +1,9 @@
 @extends('layout.dashboard')
-@section('sectionTitle', 'Penjualan Page')
+@section('title', 'Penjualan Page')
 
 @section('content')
 <div class="section-header">
-  <h1>@yield('sectionTitle')</h1>
+  <h1>@yield('title')</h1>
 </div>
 <div class="card">
   <div class="card-body">
@@ -168,7 +168,6 @@
 @push('scripts')
 <script>
   $(document).ready(() => {
-    $("select").select2();
     const rupiahFormat = (data) => {
       let reverse = data.toString().split('').reverse().join('');
       ribuan = reverse.match(/\d{1,3}/g);

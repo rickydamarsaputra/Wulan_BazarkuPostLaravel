@@ -55,17 +55,13 @@ class PenjualanController extends Controller
     public function create(Request $request)
     {
         $divisiID = empty($request->divisi_id) ? auth()->user()->divisi->ID_divisi : $request->divisi_id;
-        $divisi = Divisi::findOrFail($divisiID);
-        $produk = Produk::whereIdDivisi($divisi->ID_divisi)->cursor()->filter(function ($pro) {
-            return $pro->qty_saat_ini > 0;
-        });
-        $sales = Sales::all();
-        $pelanggan = Pelanggan::cursor()->filter(function ($pelang) {
-            return $pelang->status_mitra != 6;
-        });
-        $ekspedisi = Ekspedisi::all();
-        $banks = Bank::select("ID_bank", "nama_bank")->get();
-        $lastOrder = Penjualan::whereIdDivisi($divisi->ID_divisi)->get()->last();
+        $divisi = Divisi::whereIdDivisi($divisiID)->first(['ID_divisi', 'kode_divisi', 'nama']);
+        $produk = Produk::whereIdDivisi($divisiID)->where('qty_saat_ini', '>', 0)->get(['ID_produk', 'nama_produk']);
+        $sales = Sales::all(['ID_sales', 'nama_sales']);
+        $pelanggan = Pelanggan::where('status_mitra', '!=', 6)->get(['ID_pelanggan', 'nama_pelanggan']);
+        $ekspedisi = Ekspedisi::all(['ID_ekspedisi', 'nama_ekspedisi']);
+        $banks = Bank::all(['ID_bank', 'nama_bank']);
+        $lastOrder = Penjualan::whereIdDivisi($divisi->ID_divisi)->get(['ID_penjualan', 'tanggal_input', 'nomor_penjualan'])->last();
         $currentCode = $lastOrder->tanggal_input == date_format(Date::now(), "Y-m-d") ? substr($lastOrder->nomor_penjualan, 16) : 0;
         $lastCode = sprintf("%04d", $currentCode + 1);
         $nomorPenjualan =  "BZ-JL-" . $divisi->kode_divisi . "-" . date_format(Date::now(), "ymd") . "-" . $lastCode;
@@ -101,7 +97,7 @@ class PenjualanController extends Controller
             $produk = Produk::find($penjualanDetailIdProduk[$penjualanDetailCounter]);
             array_push($penjualanDetail, [
                 "id_produk" => $penjualanDetailIdProduk[$penjualanDetailCounter],
-                "keterangan" => $penjualanDetailKeterangan[$penjualanDetailCounter],
+                "keterangan" => empty($penjualanDetailKeterangan[$penjualanDetailCounter]) ? "-" : $penjualanDetailKeterangan[$penjualanDetailCounter],
                 "hpp" => $produk->HPP,
                 "jumlah" => $penjualanDetailJumlah[$penjualanDetailCounter],
                 "harga" => $penjualanDetailHarga[$penjualanDetailCounter],
@@ -136,7 +132,7 @@ class PenjualanController extends Controller
             // "telp_penerima" => $request->notel_penerima,
             // "alamat_penerima" => $request->alamat_penerima,
             "penerima" => nl2br($request->penerima),
-            "keterangan" => $request->keterangan,
+            "keterangan" => empty($request->keterangan) ? "-" : $request->keterangan,
             "berat" => $request->berat,
             "status_dropship" => $request->status_dropship != "on" ? 0 : 1,
             "nama_pengirim_dropship" => empty($request->nama_pengirim_dropship) ? "Bazarku $divisi->nama" : $request->nama_pengirim_dropship,

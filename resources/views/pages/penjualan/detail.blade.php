@@ -1,13 +1,13 @@
 @extends('layout.dashboard')
-@section('sectionTitle', 'Penjualan Detail')
+@section('title', 'Penjualan Detail')
 
 @section('content')
 <div class="section-header d-flex justify-content-between">
-  <h1>@yield('sectionTitle') - {{$penjualan->nomor_penjualan}}</h1>
+  <h1>@yield('title') - {{$penjualan->nomor_penjualan}}</h1>
   <div>
     <a href="{{route('penjualan.index')}}" class="btn btn-info">Kembali</a>
     <a href="{{route('penjualan.choose.divisi')}}" class="btn btn-primary mx-2">Tambah Penjualan</a>
-    <a href="{{route('penjualan.print.invoice', $penjualan->nomor_penjualan)}}" class="btn btn-danger">Print Invoice</a>
+    <a href="{{route('penjualan.print.invoice', $penjualan->nomor_penjualan)}}" target="BLANK" class="btn btn-danger">Print Invoice</a>
   </div>
 </div>
 

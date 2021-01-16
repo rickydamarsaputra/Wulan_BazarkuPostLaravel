@@ -1,10 +1,10 @@
 @extends('layout.dashboard')
-@section('sectionTitle', 'Penjualan Page')
+@section('title', 'Penjualan Page')
 
 @section('content')
 <div x-data="{itemToggle: 'detail'}">
   <div class="section-header d-flex justify-content-between">
-    <h1>@yield('sectionTitle')</h1>
+    <h1>@yield('title')</h1>
     <div>
       <button @click="itemToggle = 'detail'" :class="{'btn-primary' : itemToggle == 'detail', 'btn-info' : itemToggle != 'detail'}" class="btn text-uppercase mr-2">detail</button>
       <button @click="itemToggle = 'table'" :class="{'btn-primary' : itemToggle == 'table', 'btn-info' : itemToggle != 'table'}" class="btn text-uppercase">tabel</button>

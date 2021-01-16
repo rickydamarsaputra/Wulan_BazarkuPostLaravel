@@ -1,5 +1,5 @@
 @extends('layout.dashboard')
-@section('title', 'Bank Page')
+@section('title', 'Sales Update Page')
 
 @section('content')
 <div class="section-header d-flex justify-content-between">

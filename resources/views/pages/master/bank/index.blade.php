@@ -76,11 +76,3 @@
   });
 </script>
 @endpush
-
-@push('styles')
-<style>
-  table#data__table__bank {
-    width: -webkit-fill-available !important;
-  }
-</style>
-@endpush

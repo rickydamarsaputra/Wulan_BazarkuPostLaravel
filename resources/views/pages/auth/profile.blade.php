@@ -1,9 +1,9 @@
 @extends('layout.dashboard')
-@section('sectionTitle', 'Profile Page')
+@section('title', 'Profile Page')
 
 @section('content')
 <div class="section-header d-flex justify-content-between">
-  <h1>@yield('sectionTitle')</h1>
+  <h1>@yield('title')</h1>
   <a href="{{route('penjualan.index')}}" class="btn btn-info">Kembali</a>
 </div>
 

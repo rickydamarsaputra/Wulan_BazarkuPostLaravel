@@ -1,4 +1,5 @@
 @extends('layout.auth')
+@section('title', 'Login Page');
 
 @section('content')
 <div class="card-header">

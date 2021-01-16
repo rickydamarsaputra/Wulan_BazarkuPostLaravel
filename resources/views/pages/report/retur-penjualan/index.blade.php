@@ -1,9 +1,9 @@
 @extends('layout.dashboard')
-@section('sectionTitle', 'Retur Penjualan Page')
+@section('title', 'Retur Penjualan Page')
 
 @section('content')
 <div class="section-header">
-  <h1>@yield('sectionTitle')</h1>
+  <h1>@yield('title')</h1>
 </div>
 <div class="card">
   <div class="card-body">
@@ -69,16 +69,8 @@
 
 @push('scripts')
 <script>
+  $('#bazarku__retur__penjualan__info').hide();
   $(document).ready(() => {
-    $("select").select2();
-    $('.daterange-cus').daterangepicker({
-      locale: {
-        format: 'YYYY-MM-DD'
-      },
-      drops: 'down',
-      opens: 'right'
-    });
-
     $('#bazarku__form__filter__retur__penjualan').on('submit', (e) => {
       e.preventDefault();
       const dateRange = $('#bazarku__date__range').val();
@@ -159,8 +151,7 @@
           ]
         });
       }
-
-      console.log(requestURL);
+      $('#bazarku__retur__penjualan__info').show();
     });
   });
 </script>

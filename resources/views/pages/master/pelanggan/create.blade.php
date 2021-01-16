@@ -55,8 +55,6 @@
 
 @push('scripts')
 <script>
-  $(document).ready(() => {
-    $("select").select2();
-  });
+  $(document).ready(() => {});
 </script>
 @endpush

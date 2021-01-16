@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-  <title>Blank Page &mdash; Stisla</title>
+  <title>Bazarku | @yield('title')</title>
 
   <!-- General CSS Files -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -27,6 +27,15 @@
       height: 35px;
       padding-left: 40px !important;
       font-weight: 400;
+    }
+
+    table {
+      width: -webkit-fill-available !important;
+    }
+
+    table th.text-center.sorting,
+    table td {
+      font-size: 12px;
     }
   </style>
 
@@ -51,11 +60,11 @@
       </div>
       <footer class="main-footer">
         <div class="footer-left">
-          Copyright &copy; 2018 <div class="bullet"></div> Design By <a href="https://nauval.in/">Muhamad Nauval Azhar</a>
+          Copyright {{date('Y')}} Bazarku &middot; App by Rowcell.ID
         </div>
-        <div class="footer-right">
+        <!-- <div class="footer-right">
           2.3.0
-        </div>
+        </div> -->
       </footer>
     </div>
   </div>
@@ -87,6 +96,18 @@
   <!-- Page Specific JS File -->
   <script src="{{asset('/assets/js/page/modules-datatables.js')}}"></script>
   <!-- <script src="{{asset('/assets/js/page/forms-advanced-forms.js')}}"></script> -->
+
+  <!-- Default Scripts -->
+  <script>
+    $("select").select2();
+    $(".daterange-cus").daterangepicker({
+      locale: {
+        format: 'YYYY-MM-DD'
+      },
+      drops: 'down',
+      opens: 'right'
+    });
+  </script>
 
   <!-- Laravel Scripts Stack-->
   @stack('scripts')

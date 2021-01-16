@@ -125,7 +125,7 @@
       </h4>
     </div>
     <div class="bazarku__invoice__section__three">
-      <h4>thanks you for shopping with us!</h4>
+      <h4>should be thank you for shopping with us!</h4>
       <h4>firagile - jangan dibanting!!!</h4>
       <p>hanya melayani komplain yang melampirkan video unboxing paket.</p>
     </div>

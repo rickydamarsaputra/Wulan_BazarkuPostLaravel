@@ -1,9 +1,9 @@
 @extends('layout.dashboard')
-@section('sectionTitle', 'Pembelian Page')
+@section('title', 'Pembelian Page')
 
 @section('content')
 <div class="section-header">
-  <h1>@yield('sectionTitle')</h1>
+  <h1>@yield('title')</h1>
 </div>
 <div class="card">
   <div class="card-body">
@@ -137,15 +137,6 @@
 @push('scripts')
 <script>
   $(document).ready(() => {
-    $("select").select2();
-    $('.daterange-cus').daterangepicker({
-      locale: {
-        format: 'YYYY-MM-DD'
-      },
-      drops: 'down',
-      opens: 'right'
-    });
-
     $('#bazarku__pembelian__info').hide();
     $('#bazarku__form__filter__pembelian').on('submit', async (e) => {
       e.preventDefault();

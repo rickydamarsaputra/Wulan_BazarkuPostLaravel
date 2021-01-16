@@ -1,9 +1,9 @@
 @extends('layout.dashboard')
-@section('sectionTitle', 'Tambah Penjualan')
+@section('title', 'Tambah Penjualan')
 
 @section('content')
 <div class="section-header d-flex justify-content-between">
-  <h1>@yield('sectionTitle')</h1>
+  <h1>@yield('title')</h1>
   @if(auth()->user()->role->nama_role != "Kasir")
   <a href="{{route('penjualan.choose.divisi')}}" class="btn btn-info">Kembali</a>
   @endif
@@ -129,7 +129,7 @@
             <div class="bazarku__line__break my-4"></div>
             <div class="bazarku__dropship__content">
               <div class="form-group row mb-4">
-                <label class="col-form-label text-left col-lg-4">Dropship</label>
+                <label class="col-form-label text-left col-lg-3 text-nowrap">Dropship</label>
                 <div class="col-lg d-flex align-items-center">
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="status_dropship" id="bazarku__dropshipping">
@@ -171,7 +171,7 @@
             <div class="form-group row mb-4">
               <label class="col-form-label text-left col-lg-4">Keterangan</label>
               <div class="col-lg">
-                <textarea class="form-control" name="keterangan" placeholder="Keterangan Penjualan" style="height: 100px;"></textarea>
+                <textarea class="form-control" name="keterangan" placeholder="Keterangan Pengiriman" style="height: 100px;"></textarea>
               </div>
             </div>
           </div>
@@ -324,8 +324,8 @@
 <script>
   $(document).ready(() => {
     let produkCounter = 1;
-    $(".choose__sales, .choose__pelanggan, .choose__ekspedisi, .choose__bank").select2();
     $(".choose__produk").select2();
+
     $(".tanggal__penjualan").daterangepicker({
       maxDate: new Date(),
       locale: {
@@ -333,6 +333,17 @@
       },
       singleDatePicker: true,
     });
+
+    const rupiahFormat = (data) => {
+      let reverse = data.toString().split('').reverse().join('');
+      try {
+        ribuan = reverse.match(/\d{1,3}/g);
+        ribuan = ribuan.join('.').split('').reverse().join('');
+        return ribuan;
+      } catch (error) {
+        return 0;
+      }
+    }
 
     const checkIfProdukItemIsEmpty = () => {
       if (!$(".bazarku__produk__item").length) {
@@ -348,17 +359,25 @@
         $(".bazarku__empty__produk").remove();
       }
     }
+
     const handleCountTotalAndGrandTotalPenjualan = () => {
       let bazarkuTotalPenjualan = 0;
-      const diskon = Number($("#bazarku__diskon__pembayaran").val());
-      const pajak = Number($("#bazarku__pajak__pembayaran").val());
-      const ongkir = Number($("#bazarku__ongkir__pembayaran").val());
+      let diskon = Number($("#bazarku__diskon__pembayaran").val());
+      let pajak = Number($("#bazarku__pajak__pembayaran").val());
+      let ongkir = Number($("#bazarku__ongkir__pembayaran").val());
+      // diskon = Number(diskon.replace('.', ''));
+      // pajak = Number(pajak.replace('.', ''));
+      // ongkir = Number(ongkir.replace('.', ''));
+
       $(".bazarku__harga__total").each((i, e) => {
-        bazarkuTotalPenjualan += Number($(e).val());
+        let currentHarga = $(e).val();
+        currentHarga = currentHarga.replace('.', '');
+        bazarkuTotalPenjualan += Number(currentHarga);
       });
-      $("#bazarku__total__pembayaran").val(bazarkuTotalPenjualan);
-      $("#bazarku__grand__total__pembayaran").val((bazarkuTotalPenjualan + pajak + ongkir) - diskon);
+      $("#bazarku__total__pembayaran").val(rupiahFormat(bazarkuTotalPenjualan));
+      $("#bazarku__grand__total__pembayaran").val(rupiahFormat((bazarkuTotalPenjualan + pajak + ongkir) - diskon));
     }
+
     const produkDetailChange = () => {
       $(".bazarku__produk__item").each((i, e) => {
         const elementID = $(e).attr("id");
@@ -389,6 +408,10 @@
                 harga,
                 qty
               } = await fetch(requestURL).then(res => res.json());
+              console.log({
+                harga,
+                qty
+              });
               if (jumlahQt > qty) {
                 Swal.fire({
                   icon: 'error',
@@ -396,8 +419,8 @@
                   text: 'Stok Barang Kurang / Habis!',
                 });
               } else {
-                $(`#${elementID}`).find(".bazarku__harga").val(harga);
-                $(`#${elementID}`).find(".bazarku__harga__total").val(harga * jumlahQt);
+                $(`#${elementID}`).find(".bazarku__harga").val(rupiahFormat(harga));
+                $(`#${elementID}`).find(".bazarku__harga__total").val(rupiahFormat(harga * jumlahQt));
 
                 $(`#${elementID}`).find(".bazarku__jumlah").on("change", (e) => {
                   if (e.target.value > qty) {
@@ -415,7 +438,6 @@
                 handleCountTotalAndGrandTotalPenjualan();
               }
             }
-
           }
         });
       });
@@ -462,16 +484,17 @@
       produkDetailAdd();
     });
     $("#bazarku__diskon__pembayaran, #bazarku__pajak__pembayaran, #bazarku__ongkir__pembayaran").on("change", (e) => {
+      e.target.value = e.target.value != "" ? e.target.value : 0;
       handleCountTotalAndGrandTotalPenjualan();
     });
-    // $(document).keyup((e) => {
-    //   const keyCode = (e.keyCode ? e.keyCode : e.which);
-    //   if (keyCode == 13) {
-    //     produkDetailAdd();
-    //     checkIfProdukItemIsEmpty();
-    //     return false;
-    //   }
-    // });
+
+    $(document).keyup((e) => {
+      if (e.keyCode == 13 && e.shiftKey) {
+        produkDetailAdd();
+        checkIfProdukItemIsEmpty();
+      }
+    });
+
     $(".bazarku__delete__produk").each(() => {
       $(this).on("click", (e) => {
         if (e.target.classList[2] == "bazarku__delete__produk") {
@@ -503,7 +526,7 @@
       if (e.target.checked) {
         const htmlElement = `
         <div class="form-group row mb-4 bazarku__dropship__pengirim">
-          <label class="col-form-label text-left col-lg-4">Pengirim</label>
+          <label class="col-form-label text-left col-lg-3 text-nowrap">Pengirim</label>
           <div class="col-lg">
             <input type="text" class="form-control" placeholder="Nama Pengirim" name="nama_pengirim_dropship">
           </div>
@@ -610,6 +633,28 @@
           text: 'Coba Periksa Inputan Anda!',
         });
       }
+    });
+
+    $('#bazarku__choose__pelanggan').on('change', (e) => {
+      const idPelanggan = e.target.value;
+      $('.bazarku__produk__item').each(async (i, e) => {
+        const elementID = $(e).attr("id");
+        const jumlahQt = $(`#${elementID}`).find(".bazarku__jumlah").val();
+        const idProduk = $(`#${elementID}`).find(".choose__produk").val();
+
+        let requestURL = "{{route('helpers.search.produk', [':idProduk', ':idPelanggan'])}}";
+        requestURL = requestURL.replace(':idProduk', idProduk);
+        requestURL = requestURL.replace(':idPelanggan', idPelanggan);
+        const {
+          data: {
+            harga
+          }
+        } = await axios.get(requestURL);
+
+        $(`#${elementID}`).find(".bazarku__harga").val(rupiahFormat(harga));
+        $(`#${elementID}`).find(".bazarku__harga__total").val(rupiahFormat(harga * jumlahQt));
+        handleCountTotalAndGrandTotalPenjualan();
+      });
     });
   });
 </script>

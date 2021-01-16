@@ -1,8 +1,8 @@
 @extends('layout.dashboard')
-@section('sectionTitle', 'Dashboard Page')
+@section('title', 'Dashboard Page')
 
 @section('content')
 <div class="section-header">
-  <h1>@yield('sectionTitle')</h1>
+  <h1>@yield('title')</h1>
 </div>
 @endsection

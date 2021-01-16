@@ -1,9 +1,9 @@
 @extends('layout.dashboard')
-@section('sectionTitle', 'Stok Produk Lengkap Page')
+@section('title', 'Stok Produk Lengkap Page')
 
 @section('content')
 <div class="section-header">
-  <h1>@yield('sectionTitle')</h1>
+  <h1>@yield('title')</h1>
 </div>
 <div class="card">
   <div class="card-body">
@@ -77,9 +77,8 @@
 @push('scripts')
 <script>
   $(document).ready(() => {
-    $("select").select2();
-    $('#bazarku__stok__produk__lengkap__info').hide();
 
+    $('#bazarku__stok__produk__lengkap__info').hide();
     $('#bazarku__form__filter__stok__barang').on('submit', (e) => {
       e.preventDefault();
       const divisiId = $('#bazarku__choose__divisi').val();
