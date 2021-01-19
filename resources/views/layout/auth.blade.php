@@ -21,7 +21,6 @@
   <style>
     .login-brand {
       margin: 20px 0;
-      /* margin-bottom: 40px; */
       font-size: 24px;
       text-transform: uppercase;
       letter-spacing: 4px;

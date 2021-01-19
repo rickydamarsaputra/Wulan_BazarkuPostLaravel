@@ -381,11 +381,11 @@
     const produkDetailChange = () => {
       $(".bazarku__produk__item").each((i, e) => {
         const elementID = $(e).attr("id");
-        const jumlahQt = $(`#${elementID}`).find(".bazarku__jumlah").val();
 
         $(`#${elementID}`).find(".choose__produk").on("change", async (e) => {
           const idProduk = e.target.value;
           const idPelanggan = $("#bazarku__choose__pelanggan").val();
+          const jumlahQt = $(`#${elementID}`).find(".bazarku__jumlah").val();
 
           if (idPelanggan == "Pilih Pelanggan") {
             Swal.fire({
@@ -408,10 +408,6 @@
                 harga,
                 qty
               } = await fetch(requestURL).then(res => res.json());
-              console.log({
-                harga,
-                qty
-              });
               if (jumlahQt > qty) {
                 Swal.fire({
                   icon: 'error',
@@ -421,25 +417,48 @@
               } else {
                 $(`#${elementID}`).find(".bazarku__harga").val(rupiahFormat(harga));
                 $(`#${elementID}`).find(".bazarku__harga__total").val(rupiahFormat(harga * jumlahQt));
-
-                $(`#${elementID}`).find(".bazarku__jumlah").on("change", (e) => {
-                  if (e.target.value > qty) {
-                    Swal.fire({
-                      icon: 'error',
-                      title: 'Oops...',
-                      text: 'Stok Barang Kurang / Habis!',
-                    });
-                    $(`#${elementID}`).find(".bazarku__jumlah").val(1);
-                  } else {
-                    $(`#${elementID}`).find(".bazarku__harga__total").val(harga * e.target.value);
-                    handleCountTotalAndGrandTotalPenjualan();
-                  }
-                });
-                handleCountTotalAndGrandTotalPenjualan();
               }
             }
           }
+          handleCountTotalAndGrandTotalPenjualan();
         });
+
+        $(`#${elementID}`).find(".bazarku__jumlah").on("change", async (e) => {
+          const idProduk = $(`#${elementID}`).find(".choose__produk").val();
+          const idPelanggan = $("#bazarku__choose__pelanggan").val();
+
+          let requestURL = "{{route('helpers.search.produk', [':idProduk', ':idPelanggan'])}}";
+          requestURL = requestURL.replace(":idProduk", idProduk);
+          requestURL = requestURL.replace(":idPelanggan", idPelanggan);
+          const {
+            data: {
+              harga,
+              qty
+            }
+          } = await axios.get(requestURL);
+
+          if (e.target.value > qty) {
+            let harga = $(`#${elementID}`).find(".bazarku__harga").val();
+            harga = Number(harga.replace('.', ''));
+            $(`#${elementID}`).find(".bazarku__harga__total").val(rupiahFormat(harga * 1));
+            $(`#${elementID}`).find(".bazarku__jumlah").val(1);
+            handleCountTotalAndGrandTotalPenjualan();
+
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Stok Barang Kurang / Habis!',
+            });
+          } else {
+            let harga = $(`#${elementID}`).find(".bazarku__harga").val();
+            harga = Number(harga.replace('.', ''));
+            const jumlah = Number(e.target.value);
+
+            $(`#${elementID}`).find(".bazarku__harga__total").val(rupiahFormat(harga * jumlah));
+            handleCountTotalAndGrandTotalPenjualan();
+          }
+        });
+
       });
     };
     const produkDetailAdd = () => {
@@ -642,18 +661,20 @@
         const jumlahQt = $(`#${elementID}`).find(".bazarku__jumlah").val();
         const idProduk = $(`#${elementID}`).find(".choose__produk").val();
 
-        let requestURL = "{{route('helpers.search.produk', [':idProduk', ':idPelanggan'])}}";
-        requestURL = requestURL.replace(':idProduk', idProduk);
-        requestURL = requestURL.replace(':idPelanggan', idPelanggan);
-        const {
-          data: {
-            harga
-          }
-        } = await axios.get(requestURL);
+        if (idProduk != 'Pilih Produk' && idPelanggan != 'Pilih Pelanggan') {
+          let requestURL = "{{route('helpers.search.produk', [':idProduk', ':idPelanggan'])}}";
+          requestURL = requestURL.replace(':idProduk', idProduk);
+          requestURL = requestURL.replace(':idPelanggan', idPelanggan);
+          const {
+            data: {
+              harga
+            }
+          } = await axios.get(requestURL);
 
-        $(`#${elementID}`).find(".bazarku__harga").val(rupiahFormat(harga));
-        $(`#${elementID}`).find(".bazarku__harga__total").val(rupiahFormat(harga * jumlahQt));
-        handleCountTotalAndGrandTotalPenjualan();
+          $(`#${elementID}`).find(".bazarku__harga").val(rupiahFormat(harga));
+          $(`#${elementID}`).find(".bazarku__harga__total").val(rupiahFormat(harga * jumlahQt));
+          handleCountTotalAndGrandTotalPenjualan();
+        }
       });
     });
   });
