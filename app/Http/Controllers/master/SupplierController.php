@@ -28,7 +28,7 @@ class SupplierController extends Controller
             'email_supplier' => 'required',
             'notelp_supplier' => 'required',
         ]);
-        $date = date_format(Date::now(), 'Y-d-m');
+        $date = date_format(Date::now(), 'Y-m-d');
         $supplier = Supplier::create([
             'nama' => $request->nama_supplier,
             'alamat' => $request->alamat_supplier,
@@ -73,7 +73,6 @@ class SupplierController extends Controller
     {
         $supplier = Supplier::findOrFail($supplierId);
         $supplier->delete();
-
         return redirect()->back();
     }
 

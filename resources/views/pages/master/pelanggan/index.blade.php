@@ -62,7 +62,7 @@
             deleteURL = deleteURL.replace(':pelangganId', data);
 
             return `
-              <form action="${deleteURL}" method="POST">
+              <form action="${deleteURL}" method="POST" class="bazarku__delete__master__item">
                 @csrf
                 @method('delete')
                 <button type="submit" class="btn btn-danger btn-sm text-capitalize">delete</button>

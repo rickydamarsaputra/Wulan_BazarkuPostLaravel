@@ -54,7 +54,7 @@
             return `
               <div class="d-flex">
                 <a href="${updateURL}" class="btn btn-sm btn-success text-capitalize mr-2">update</a>
-                <form action="${deleteURL}" method="POST">
+                <form action="${deleteURL}" method="POST" class="bazarku__delete__master__item">
                   @csrf
                   @method('delete')
                   <button type="submit" class="btn btn-sm btn-danger text-capitalize">delete</button>

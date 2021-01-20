@@ -42,7 +42,7 @@ class BankController extends Controller
 
     public function createProcess(Request $request)
     {
-        $date = date_format(Date::now(), 'Y-d-m');
+        $date = date_format(Date::now(), 'Y-m-d');
         $this->validate($request, [
             'nama_bank' => 'required',
         ]);
