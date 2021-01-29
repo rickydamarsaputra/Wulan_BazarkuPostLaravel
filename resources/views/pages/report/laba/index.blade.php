@@ -66,6 +66,8 @@
       <div class="bazarku__line__break"></div>
       <h6>· 0000 - ONGKIR (MASUK) <span id="bazarku__ongkir"></span></h6>
       <div class="bazarku__line__break"></div>
+      <h6>· TRANSAKSI AKUNTANSI (MASUK) <span id="bazarku__transaksi__akuntansi__masuk"></span></h6>
+      <div class="bazarku__line__break"></div>
       <h6>· PENJUALAN <span id="bazarku__total__penjualan"></span></h6>
       <div class="bazarku__line__break"></div>
       <h6> · RETUR PENJUALAN <span id="bazarku__retur__penjualan"></span></h6>
@@ -80,13 +82,17 @@
     <div class="text-capitalize bazarku__laba__beban">
       <h6 class="title">beban usaha</h6>
       <div class="bazarku__line__break"></div>
-      <h6>· 0000 - PINDAH DANA (KELUAR) <span id="bazarku__pindah__dana__keluar"></span></h6>
-      <div class="bazarku__line__break"></div>
+      <!-- <h6>· 0000 - PINDAH DANA (KELUAR) <span id="bazarku__pindah__dana__keluar"></span></h6> -->
+      <!-- <div class="bazarku__line__break"></div> -->
+      <!-- <h6>· 0000 - PENGELUARAN DLL <span id="bazarku__pengeluaran__dll"></span></h6>
+      <div class="bazarku__line__break"></div> -->
       <h6>· 0000 - DISKON <span id="bazarku__diskon"></span></h6>
       <div class="bazarku__line__break"></div>
-      <h6>· 0000 - PENGELUARAN DLL <span id="bazarku__pengeluaran__dll"></span></h6>
-      <div class="bazarku__line__break"></div>
       <h6>· HARGA POKOK PENJUALAN <span id="bazarku__hpp__penjualan"></span></h6>
+      <div class="bazarku__line__break"></div>
+      <h6>· TRANSAKSI AKUNTANSI (KELUAR) <span id="bazarku__transaksi__akuntansi__keluar"></span></h6>
+      <div class="bazarku__line__break"></div>
+      <h6> · RETUR PEMBELIAN <span id="bazarku__retur__pembelian"></span></h6>
       <div class="bazarku__line__break"></div>
       <div class="d-flex justify-content-between text-danger">
         <h6>TOTAL BEBAN</h6>
@@ -152,9 +158,12 @@
           pajak,
           ongkir,
           total_penjualan,
-          nominal_retur,
           total_pendapatan,
           pindah_dana_keluar,
+          retur_penjualan,
+          retur_pembelian,
+          transaksi_akuntansi_masuk,
+          transaksi_akuntansi_keluar,
           diskon,
           pengeluaran_dll,
           hpp_penjualan,
@@ -168,7 +177,10 @@
       $("#bazarku__pajak").text(`Rp.${pajak}`);
       $("#bazarku__ongkir").text(`Rp.${ongkir}`);
       $("#bazarku__total__penjualan").text(`Rp.${total_penjualan}`);
-      $("#bazarku__retur__penjualan").text(`Rp.${nominal_retur}`);
+      $("#bazarku__retur__penjualan").text(`Rp.${retur_penjualan}`);
+      $("#bazarku__retur__pembelian").text(`Rp.${retur_pembelian}`);
+      $("#bazarku__transaksi__akuntansi__masuk").text(`Rp.${transaksi_akuntansi_masuk}`);
+      $("#bazarku__transaksi__akuntansi__keluar").text(`Rp.${transaksi_akuntansi_keluar}`);
       $("#bazarku__total__pendapatan").text(`Rp.${total_pendapatan}`);
       $("#bazarku__pindah__dana__keluar").text(`Rp.${pindah_dana_keluar}`);
       $("#bazarku__diskon").text(`Rp.${diskon}`);

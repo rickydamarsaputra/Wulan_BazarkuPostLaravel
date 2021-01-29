@@ -28,26 +28,30 @@ class LabaController extends Controller
         $dateRangeExplode = explode(" ", $dateRange);
         $dateFirst = $dateRangeExplode[0];
         $dateLast = $dateRangeExplode[2];
+
+        // $penjualan = Penjualan::with(["penjualanDetail"])->whereIdDivisi($divisiId)->whereIdSales($salesId)->whereBetween("tanggal_input", [$dateFirst, $dateLast])->get(["nomor_penjualan", "pajak", "ongkir", "total", "diskon"]);
+        // $transaksiAkuntansi = TransaksiAkuntansi::with(["perkiraanAkuntansi", "divisi"])->whereIdDivisi($divisiId)->whereBetween("tanggal_transaksi", [$dateFirst, $dateLast])->get(["ID_perkiraan", "tipe_akun", "nominal", "ID_divisi"]);
         if ($divisiId > 0 && $salesId > 0) {
             $penjualan = Penjualan::with(["penjualanDetail"])->whereIdDivisi($divisiId)->whereIdSales($salesId)->whereBetween("tanggal_input", [$dateFirst, $dateLast])->get(["nomor_penjualan", "pajak", "ongkir", "total", "diskon"]);
-            $transaksiAkuntansi = TransaksiAkuntansi::whereIdDivisi($divisiId)->whereBetween("tanggal_transaksi", [$dateFirst, $dateLast])->get(["ID_perkiraan", "nominal"]);
+            $transaksiAkuntansi = TransaksiAkuntansi::whereIdDivisi($divisiId)->whereBetween("tanggal_transaksi", [$dateFirst, $dateLast])->get(["ID_perkiraan", "tipe_akun", "nominal", "ID_divisi"]);
         } elseif ($divisiId > 0) {
             $penjualan = Penjualan::with(["penjualanDetail"])->whereIdDivisi($divisiId)->whereBetween("tanggal_input", [$dateFirst, $dateLast])->get(["nomor_penjualan", "pajak", "ongkir", "total", "diskon"]);
-            $transaksiAkuntansi = TransaksiAkuntansi::whereIdDivisi($divisiId)->whereBetween("tanggal_transaksi", [$dateFirst, $dateLast])->get(["ID_perkiraan", "nominal"]);
+            $transaksiAkuntansi = TransaksiAkuntansi::whereIdDivisi($divisiId)->whereBetween("tanggal_transaksi", [$dateFirst, $dateLast])->get(["ID_perkiraan", "tipe_akun", "nominal", "ID_divisi"]);
         } elseif ($salesId > 0) {
             $penjualan = Penjualan::with(["penjualanDetail"])->whereIdSales($salesId)->whereBetween("tanggal_input", [$dateFirst, $dateLast])->get(["nomor_penjualan", "pajak", "ongkir", "total", "diskon"]);
-            $transaksiAkuntansi = TransaksiAkuntansi::whereBetween("tanggal_transaksi", [$dateFirst, $dateLast])->get(["ID_perkiraan", "nominal"]);
+            $transaksiAkuntansi = TransaksiAkuntansi::whereBetween("tanggal_transaksi", [$dateFirst, $dateLast])->get(["ID_perkiraan", "tipe_akun", "nominal", "ID_divisi"]);
         } else {
             $penjualan = Penjualan::with(["penjualanDetail"])->whereBetween("tanggal_input", [$dateFirst, $dateLast])->get(["nomor_penjualan", "pajak", "ongkir", "total", "diskon"]);
-            $transaksiAkuntansi = TransaksiAkuntansi::whereBetween("tanggal_transaksi", [$dateFirst, $dateLast])->get(["ID_perkiraan", "nominal"]);
+            $transaksiAkuntansi = TransaksiAkuntansi::whereBetween("tanggal_transaksi", [$dateFirst, $dateLast])->get(["ID_perkiraan", "tipe_akun", "nominal", "ID_divisi"]);
         }
 
         $divisi = Divisi::whereIdDivisi($divisiId)->first(["nama"]);
         $pajak = 0;
         $ongkir = 0;
         $totalPenjualan = 0;
-        $retur = Retur::whereBetween("tanggal_input", [$dateFirst, $dateLast])->whereJenisRetur(2)->get(["nominal_retur", "HPP"]);
-        $nominalRetur = 0;
+        $retur = Retur::whereBetween("tanggal_input", [$dateFirst, $dateLast])->get(["nominal_retur", "HPP", "jenis_retur"]);
+        $returPenjualan = 0;
+        $returPembelian = 0;
         $pindahDanaKeluar = 0;
         $diskon = 0;
         $pengeluaranDLL = 0;
@@ -55,6 +59,9 @@ class LabaController extends Controller
         $hppPenjualan = 0;
         $totalBeban = 0;
         $labaUsaha = 0;
+        $semuaNominalTransaksiAkuntansi = 0;
+        $transaksiAkuntansiMasuk = 0;
+        $transaksiAkuntansiKeluar = 0;
 
         foreach ($penjualan as $loopItem) {
             $pajak += $loopItem->pajak;
@@ -68,7 +75,11 @@ class LabaController extends Controller
         }
 
         foreach ($retur as $loopItem) {
-            $nominalRetur += $loopItem->nominal_retur;
+            if ($loopItem->jenis_retur == 1) {
+                $returPembelian += $loopItem->nominal_retur;
+            } else {
+                $returPenjualan += $loopItem->nominal_retur;
+            }
             $hppRetur += $loopItem->HPP;
         }
 
@@ -78,11 +89,19 @@ class LabaController extends Controller
             } else if ($loopItem->ID_perkiraan == 19) {
                 $pengeluaranDLL += $loopItem->nominal;
             }
+
+            if ($loopItem->tipe_akun == 1) {
+                $transaksiAkuntansiMasuk += $loopItem->nominal;
+            } else {
+                $transaksiAkuntansiKeluar += $loopItem->nominal;
+            }
+
+            $semuaNominalTransaksiAkuntansi += $loopItem->nominal;
         }
 
         $hppPenjualan = $hppPenjualan - $hppRetur;
-        $totalPendapatan = $pajak + $ongkir + $totalPenjualan + $nominalRetur;
-        $totalBeban = $pindahDanaKeluar + $diskon + $pengeluaranDLL + $hppPenjualan;
+        $totalPendapatan = $pajak + $ongkir + $transaksiAkuntansiMasuk + $totalPenjualan + $returPenjualan;
+        $totalBeban = $diskon + $hppPenjualan + $transaksiAkuntansiKeluar + $returPembelian;
         $labaUsaha = $totalPendapatan - $totalBeban;
 
         return response()->json([
@@ -90,11 +109,15 @@ class LabaController extends Controller
             'pajak' => number_format($pajak),
             'ongkir' => number_format($ongkir),
             'total_penjualan' => number_format($totalPenjualan),
-            'nominal_retur' => number_format($nominalRetur),
+            'retur_penjualan' => number_format($returPenjualan),
+            'retur_pembelian' => number_format($returPembelian),
+            'transaksi_akuntansi_masuk' => number_format($transaksiAkuntansiMasuk),
+            'transaksi_akuntansi_keluar' => number_format($transaksiAkuntansiKeluar),
             'total_pendapatan' => number_format($totalPendapatan),
             'pindah_dana_keluar' => number_format($pindahDanaKeluar),
             'diskon' => number_format($diskon),
             'pengeluaran_dll' => number_format($pengeluaranDLL),
+            'semua_nominal_transaksi_akuntansi' => number_format($semuaNominalTransaksiAkuntansi),
             'hpp_penjualan' => number_format($hppPenjualan),
             'total_beban' => number_format($totalBeban),
             'laba_usaha' => number_format($labaUsaha),
