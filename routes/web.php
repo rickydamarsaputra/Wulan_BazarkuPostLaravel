@@ -105,12 +105,14 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 
     // penjualan
     Route::prefix('penjualan')->group(function () {
-        Route::get('/', [PenjualanController::class, 'index'])->name('penjualan.index');
-        Route::get('/choose', [PenjualanController::class, 'chooseDivisi'])->middleware('admin')->name('penjualan.choose.divisi');
-        Route::match(['get', 'post'], '/create', [PenjualanController::class, 'create'])->name('penjualan.create');
-        Route::post('/submit', [PenjualanController::class, 'submitPenjualan'])->name('penjualan.submit');
-        Route::get('/detail/{nomorPenjualan}', [PenjualanController::class, 'detailPenjualan'])->name('penjualan.detail');
+        Route::middleware('admin')->group(function () {
+            Route::get('/', [PenjualanController::class, 'index'])->name('penjualan.index');
+            Route::get('/choose', [PenjualanController::class, 'chooseDivisi'])->name('penjualan.choose.divisi');
+            Route::post('/submit', [PenjualanController::class, 'submitPenjualan'])->name('penjualan.submit');
+            Route::get('/detail/{nomorPenjualan}', [PenjualanController::class, 'detailPenjualan'])->name('penjualan.detail');
+        });
         Route::get('/print/{nomorPenjualan}', [PenjualanController::class, 'printInvoice'])->name('penjualan.print.invoice');
+        Route::match(['get', 'post'], '/create', [PenjualanController::class, 'create'])->name('penjualan.create');
     });
 
     // report

@@ -5,7 +5,10 @@ namespace App\Http\Controllers\master;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Bank;
+use App\Models\Divisi;
+use App\Models\Brangkas;
 use DataTables;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 
 class BankController extends Controller
@@ -42,7 +45,12 @@ class BankController extends Controller
 
     public function createProcess(Request $request)
     {
-        $date = date_format(Date::now(), 'Y-m-d');
+        $dateExplode = explode(' ', date_format(Date::now(), 'Y-m-d H:i:s'));
+        $user = Auth::user();
+        $date = $dateExplode[0];
+        $time = $dateExplode[1];
+        $divisi = Divisi::get();
+
         $this->validate($request, [
             'nama_bank' => 'required',
         ]);
@@ -52,6 +60,19 @@ class BankController extends Controller
             'tanggal_input' => $date,
             'status' => 1
         ]);
+
+        foreach ($divisi as $loopItem) {
+            $brangkas = Brangkas::create([
+                'nomor_mutasi_terakhir' => 0,
+                'ID_bank' => $bank->ID_bank,
+                'ID_divisi' => $loopItem->ID_divisi,
+                'nominal' => 0,
+                'tanggal_update_terakhir' => $date,
+                'jam_update_terakhir' => $time,
+                'ID_transaksi_terakhir' => 0,
+                'ID_user_update_terakhir' => $user->ID_user,
+            ]);
+        }
 
         return redirect()->route('bank.index');
     }
@@ -90,10 +111,17 @@ class BankController extends Controller
         ]);
 
         $bank = Bank::findOrFail($bankId);
+        $user = Auth::user();
         $bank->update([
             'nama_bank' => $request->nama_bank,
             'kategori_bank' => $request->status_bank,
         ]);
+
+        foreach ($bank->brangkas as $loopItem) {
+            $loopItem->update([
+                'ID_user_update_terakhir' => $user->ID_user
+            ]);
+        }
 
         return redirect()->route('bank.index');
     }

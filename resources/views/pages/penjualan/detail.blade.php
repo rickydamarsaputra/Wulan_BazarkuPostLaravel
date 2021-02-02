@@ -6,7 +6,9 @@
   <h1>@yield('title') - {{$penjualan->nomor_penjualan}}</h1>
   <div>
     <a href="{{route('penjualan.index')}}" class="btn btn-info">Kembali</a>
+    @if(auth()->user()->role->nama_role != "Kasir")
     <a href="{{route('penjualan.choose.divisi')}}" class="btn btn-primary mx-2">Tambah Penjualan</a>
+    @endif
     <a href="{{route('penjualan.print.invoice', $penjualan->nomor_penjualan)}}" target="BLANK" class="btn btn-danger">Print Invoice</a>
   </div>
 </div>

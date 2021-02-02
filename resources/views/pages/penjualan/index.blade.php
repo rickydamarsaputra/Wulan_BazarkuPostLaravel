@@ -39,9 +39,11 @@
   </div>
   <div class="card" x-show="itemToggle == 'table'">
     <div class="card-body">
+      @if(auth()->user()->role->nama_role != "Kasir")
       <div class="d-flex justify-content-end mb-4">
         <a href="{{route('penjualan.choose.divisi')}}" class="btn btn-primary"><i class="far fa-plus-square mr-2"></i><span>Tambah Penjualan</span></a>
       </div>
+      @endif
       <div class="table-responsive">
         <table class="table table-striped text-uppercase" id="data__table__penjualan">
           <thead>

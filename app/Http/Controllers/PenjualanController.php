@@ -56,7 +56,7 @@ class PenjualanController extends Controller
     {
         $divisiID = empty($request->divisi_id) ? auth()->user()->divisi->ID_divisi : $request->divisi_id;
         $divisi = Divisi::whereIdDivisi($divisiID)->first(['ID_divisi', 'kode_divisi', 'nama']);
-        $produk = Produk::whereIdDivisi($divisiID)->where('qty_saat_ini', '>', 0)->get(['ID_produk', 'nama_produk']);
+        $produk = Produk::whereIdDivisi($divisiID)->where('qty_saat_ini', '>', 0)->get(['ID_produk', 'nama_produk', 'qty_saat_ini']);
         $sales = Sales::all(['ID_sales', 'nama_sales']);
         $pelanggan = Pelanggan::where('status_mitra', '!=', 6)->get(['ID_pelanggan', 'nama_pelanggan']);
         $ekspedisi = Ekspedisi::all(['ID_ekspedisi', 'nama_ekspedisi']);

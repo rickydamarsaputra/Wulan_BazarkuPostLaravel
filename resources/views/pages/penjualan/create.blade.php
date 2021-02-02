@@ -74,7 +74,7 @@
                 <select class="form-control choose__produk" name="penjualan_detail_id_produk[]">
                   <option>Pilih Produk</option>
                   @foreach($produk as $pro)
-                  <option value="{{$pro->ID_produk}}">{{$pro->nama_produk}}</option>
+                  <option value="{{$pro->ID_produk}}">{{$pro->nama_produk}} ({{$pro->qty_saat_ini}})</option>
                   @endforeach
                 </select>
               </td>
@@ -468,7 +468,7 @@
             <select class="form-control choose__produk" name="penjualan_detail_id_produk[]">
               <option>Pilih Produk</option>
               @foreach($produk as $pro)
-              <option value="{{$pro->ID_produk}}">{{$pro->nama_produk}}</option>
+              <option value="{{$pro->ID_produk}}">{{$pro->nama_produk}} ({{$pro->qty_saat_ini}})</option>
               @endforeach
             </select>
           </td>

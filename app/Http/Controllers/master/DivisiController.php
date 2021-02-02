@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\master;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bank;
+use App\Models\Brangkas;
 use Illuminate\Http\Request;
 use App\Models\Divisi;
 use DataTables;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 
 class DivisiController extends Controller
@@ -22,7 +25,12 @@ class DivisiController extends Controller
 
     public function createProcess(Request $request)
     {
-        $date = date_format(Date::now(), 'Y-d-m');
+        $dateExplode = explode(' ', date_format(Date::now(), 'Y-m-d H:i:s'));
+        $banks = Bank::get();
+        $user = Auth::user();
+        $date = $dateExplode[0];
+        $time = $dateExplode[1];
+
         $this->validate($request, [
             'kode_divisi' => 'required',
             'nama_divisi' => 'required',
@@ -35,6 +43,19 @@ class DivisiController extends Controller
             'tanggal_input' => $date,
             'status' => 1,
         ]);
+
+        foreach ($banks as $loopItem) {
+            $brangkas = Brangkas::create([
+                'nomor_mutasi_terakhir' => 0,
+                'ID_bank' => $loopItem->ID_bank,
+                'ID_divisi' => $divisi->ID_divisi,
+                'nominal' => 0,
+                'tanggal_update_terakhir' => $date,
+                'jam_update_terakhir' => $time,
+                'ID_transaksi_terakhir' => 0,
+                'ID_user_update_terakhir' => $user->ID_user,
+            ]);
+        }
 
         return redirect()->route('divisi.index');
     }
