@@ -25,7 +25,7 @@
     .main-sidebar .sidebar-menu li ul.dropdown-menu li a {
       color: #868e96;
       height: 35px;
-      padding-left: 40px !important;
+      padding-left: 30px !important;
       font-weight: 400;
     }
 

@@ -13,7 +13,7 @@ class Bank extends Model
     protected $primaryKey = "ID_bank";
     public $incrementing = true;
     public $timestamps = false;
-    protected $guarded = ["ID_bank "];
+    protected $guarded = ["ID_bank"];
 
     public function brangkas()
     {

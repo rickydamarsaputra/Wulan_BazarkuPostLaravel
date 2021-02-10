@@ -13,6 +13,7 @@ use App\Models\Ekspedisi;
 use App\Models\Bank;
 use App\Models\PenjualanDetail;
 use PDF;
+use App\Http\Controllers\modul\BazarkuModulController;
 
 use DataTables;
 
@@ -62,7 +63,7 @@ class PenjualanController extends Controller
         $ekspedisi = Ekspedisi::all(['ID_ekspedisi', 'nama_ekspedisi']);
         $banks = Bank::all(['ID_bank', 'nama_bank']);
         $lastOrder = Penjualan::whereIdDivisi($divisi->ID_divisi)->get(['ID_penjualan', 'tanggal_input', 'nomor_penjualan'])->last();
-        $currentCode = $lastOrder->tanggal_input == date_format(Date::now(), "Y-m-d") ? substr($lastOrder->nomor_penjualan, 16) : 0;
+        $currentCode = empty($lastOrder) ? 0 : ($lastOrder->tanggal_input == date_format(Date::now(), "Y-m-d") ? substr($lastOrder->nomor_penjualan, 16) : 0);
         $lastCode = sprintf("%04d", $currentCode + 1);
         $nomorPenjualan =  "BZ-JL-" . $divisi->kode_divisi . "-" . date_format(Date::now(), "ymd") . "-" . $lastCode;
 
@@ -80,28 +81,29 @@ class PenjualanController extends Controller
     public function submitPenjualan(Request $request)
     {
         $divisi = Divisi::whereNama($request->nama_divisi)->first();
+        $bank = Bank::find($request->id_bank);
         $lastOrder = Penjualan::whereIdDivisi($divisi->ID_divisi)->get()->last();
-        $currentCode = $lastOrder->tanggal_input == date_format(Date::now(), "Y-m-d") ? substr($lastOrder->nomor_penjualan, 16) : 0;
+        $currentCode = empty($lastOrder) ? 0 : ($lastOrder->tanggal_input == date_format(Date::now(), "Y-m-d") ? substr($lastOrder->nomor_penjualan, 16) : 0);
         $lastCode = sprintf("%04d", $currentCode + 1);
         $nomorPenjualan =  "BZ-JL-" . $divisi->kode_divisi . "-" . date_format(Date::now(), "ymd") . "-" . $lastCode;
-
         $penjualanDetail = [];
         $penjualanDetailCounter = 0;
         $penjualanDetailIdProduk = $request->penjualan_detail_id_produk;
-        $penjualanDetailKeterangan = $request->penjualan_detail_keterangan;
+        // $penjualanDetailKeterangan = $request->penjualan_detail_keterangan;
         $penjualanDetailJumlah = $request->penjualan_detail_jumlah;
         $penjualanDetailHarga = $request->penjualan_detail_harga;
         $penjualanDetailTotal = $request->penjualan_detail_total;
 
-        foreach ($penjualanDetailKeterangan as $loop) {
+        foreach ($penjualanDetailIdProduk as $loop) {
             $produk = Produk::find($penjualanDetailIdProduk[$penjualanDetailCounter]);
             array_push($penjualanDetail, [
                 "id_produk" => $penjualanDetailIdProduk[$penjualanDetailCounter],
-                "keterangan" => empty($penjualanDetailKeterangan[$penjualanDetailCounter]) ? "-" : $penjualanDetailKeterangan[$penjualanDetailCounter],
+                // "keterangan" => empty($penjualanDetailKeterangan[$penjualanDetailCounter]) ? "-" : $penjualanDetailKeterangan[$penjualanDetailCounter],
+                "keterangan" => "-",
                 "hpp" => $produk->HPP,
                 "jumlah" => $penjualanDetailJumlah[$penjualanDetailCounter],
-                "harga" => $penjualanDetailHarga[$penjualanDetailCounter],
-                "total" => $penjualanDetailTotal[$penjualanDetailCounter],
+                "harga" => str_replace('.', '', $penjualanDetailHarga[$penjualanDetailCounter]),
+                "total" => str_replace('.', '', $penjualanDetailTotal[$penjualanDetailCounter]),
             ]);
             $penjualanDetailCounter++;
         }
@@ -132,16 +134,17 @@ class PenjualanController extends Controller
             // "telp_penerima" => $request->notel_penerima,
             // "alamat_penerima" => $request->alamat_penerima,
             "penerima" => nl2br($request->penerima),
-            "keterangan" => empty($request->keterangan) ? "-" : $request->keterangan,
+            // "keterangan" => empty($request->keterangan) ? "-" : $request->keterangan,
+            "keterangan" => "-",
             "berat" => $request->berat,
             "status_dropship" => $request->status_dropship != "on" ? 0 : 1,
             "nama_pengirim_dropship" => empty($request->nama_pengirim_dropship) ? "Bazarku $divisi->nama" : $request->nama_pengirim_dropship,
-            "total" => $request->total,
+            "total" => str_replace('.', '', $request->total),
             "diskon" => $request->diskon,
             "pajak" => $request->pajak,
             "ongkir" => $request->ongkir,
             "realisasi_ongkir" => 0,
-            "grand_total" => $request->grand_total,
+            "grand_total" => str_replace('.', '', $request->grand_total),
             "sudah_bayar" => $request->dibayar,
             "status_pembayaran" => $request->dibayar >= $request->grand_total ? 1 : 0,
             "ID_user" => auth()->user()->ID_user,
@@ -157,7 +160,8 @@ class PenjualanController extends Controller
                 "ID_penjualan" => $nomorPenjualan,
                 "tanggal_jual" => $request->tanggal_jual,
                 "ID_produk" => $penjualanDeta["id_produk"],
-                "keterangan" => empty($penjualanDeta["keterangan"]) ? "-" : $penjualanDeta["keterangan"],
+                // "keterangan" => empty($penjualanDeta["keterangan"]) ? "-" : $penjualanDeta["keterangan"],
+                "keterangan" => "-",
                 "HPP" => $penjualanDeta["hpp"],
                 "qty" => $penjualanDeta["jumlah"],
                 "harga_jual" => $penjualanDeta["harga"],
@@ -166,6 +170,7 @@ class PenjualanController extends Controller
             ]);
         }
 
+        BazarkuModulController::insertMutasiAndUpdateBrangkas($divisi, $bank, '2', $nomorPenjualan, '1', $request->grand_total);
         return redirect()->route("penjualan.print.invoice", $penjualan->nomor_penjualan);
         // return [
         //     "divisi" => $divisi,

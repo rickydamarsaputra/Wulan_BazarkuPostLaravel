@@ -42,7 +42,7 @@
           <label class="col-form-label text-md-right col-lg-2">Pelanggan</label>
           <div class="col-lg-4">
             <select class="form-control choose__pelanggan" id="bazarku__choose__pelanggan" name="id_pelanggan">
-              <option>Pilih Pelanggan</option>
+              <!-- <option>Pilih Pelanggan</option> -->
               @foreach($pelanggan as $pelang)
               <option value="{{$pelang->ID_pelanggan}}">{{$pelang->nama_pelanggan}}</option>
               @endforeach
@@ -63,7 +63,7 @@
           <table class="table table-bordered table-md bazarku__table__data text-center text-uppercase">
             <tr>
               <th>Produk</th>
-              <th>Keterangan</th>
+              <!-- <th>Keterangan</th> -->
               <th>Jumlah</th>
               <th>Harga</th>
               <th>Total</th>
@@ -78,9 +78,9 @@
                   @endforeach
                 </select>
               </td>
-              <td>
+              <!-- <td>
                 <input type="text" class="form-control" placeholder="Keterangan Penjualan" name="penjualan_detail_keterangan[]">
-              </td>
+              </td> -->
               <td style="width: 100px;">
                 <input type="text" class="form-control bazarku__jumlah" value="1" name="penjualan_detail_jumlah[]">
               </td>
@@ -168,12 +168,12 @@
                 </div>
               </div>
             </div>
-            <div class="form-group row mb-4">
+            <!-- <div class="form-group row mb-4">
               <label class="col-form-label text-left col-lg-4">Keterangan</label>
               <div class="col-lg">
                 <textarea class="form-control" name="keterangan" placeholder="Keterangan Pengiriman" style="height: 100px;"></textarea>
               </div>
-            </div>
+            </div> -->
           </div>
           <div class="col-lg-4">
             <h6><i class="far fa-money-bill-alt mr-2"></i><span>Pembayaran</span></h6>
@@ -277,7 +277,7 @@
                       <span>Rp</span>
                     </div>
                   </div>
-                  <input type="text" class="form-control" value="0" name="dibayar">
+                  <input type="text" class="form-control" value="0" name="dibayar" readonly id="bazarku__dibayar">
                   <div class="input-group-prepend">
                     <div class="input-group-text">
                       <span>.-</span>
@@ -376,6 +376,7 @@
       });
       $("#bazarku__total__pembayaran").val(rupiahFormat(bazarkuTotalPenjualan));
       $("#bazarku__grand__total__pembayaran").val(rupiahFormat((bazarkuTotalPenjualan + pajak + ongkir) - diskon));
+      $("#bazarku__dibayar").val(rupiahFormat((bazarkuTotalPenjualan + pajak + ongkir) - diskon));
     }
 
     const produkDetailChange = () => {
@@ -471,9 +472,6 @@
               <option value="{{$pro->ID_produk}}">{{$pro->nama_produk}} ({{$pro->qty_saat_ini}})</option>
               @endforeach
             </select>
-          </td>
-          <td>
-            <input type="text" class="form-control" placeholder="Keterangan Penjualan" name="penjualan_detail_keterangan[]">
           </td>
           <td style="width: 100px;">
             <input type="text" class="form-control bazarku__jumlah" value="1" name="penjualan_detail_jumlah[]">

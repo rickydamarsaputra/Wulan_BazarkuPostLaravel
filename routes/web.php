@@ -18,6 +18,7 @@ use App\Http\Controllers\report\ProdukTerlarisController;
 use App\Http\Controllers\report\ReturPenjualanController;
 use App\Http\Controllers\report\StokProdukController;
 use App\Http\Controllers\report\StokProdukLengkapController;
+use App\Http\Controllers\TransaksiAkuntansiController;
 use App\Models\Role;
 use App\Models\User;
 
@@ -115,6 +116,14 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         Route::match(['get', 'post'], '/create', [PenjualanController::class, 'create'])->name('penjualan.create');
     });
 
+    // transaksi akuntansi
+    Route::prefix('transaksi-akuntansi')->group(function () {
+        Route::get('/', [TransaksiAkuntansiController::class, 'index'])->name('transaksi.akuntansi.index');
+        Route::get('/create', [TransaksiAkuntansiController::class, 'createView'])->name('transaksi.akuntansi.create.view');
+        Route::post('/create', [TransaksiAkuntansiController::class, 'createProcess'])->name('transaksi.akuntansi.create.process');
+        Route::delete('/{idTransaksi}', [TransaksiAkuntansiController::class, 'delete'])->name('transaksi.akuntansi.delete');
+    });
+
     // report
     Route::prefix('report')->group(function () {
         Route::prefix('stok-produk')->group(function () {
@@ -162,10 +171,13 @@ Route::prefix('helpers')->group(function () {
     Route::get('/laba/filter/{divisiId}/{salesId}/{dateRange}', [LabaController::class, 'filter'])->name('helpers.laba.filter');
     Route::get('/pembelian/{supplierId}/{divisiId}/{bankId}/{status}/{dateRange}', [PembelianController::class, 'countPembelianInfo'])->name('helpers.pembelian.count');
     Route::get('/penjualan/{pelangganId}/{divisiId}/{salesId}/{ekspedisiId}/{bankId}/{status}/{dateRange}', [ReportPenjualanController::class, 'countPenjualanInfo'])->name('helpers.penjualan.count');
+
+    Route::get('/perkiraan-akuntansi/filter/{tipeAkun}', [TransaksiAkuntansiController::class, 'filterPerkiraanAkuntansi'])->name('helpers.filter.perkiraan.akuntansi');
 });
 
 Route::prefix('datatables')->group(function () {
     Route::get('/penjualan', [PenjualanController::class, 'datatables'])->name('datatables.penjualan');
+    Route::get('/transaksi-akuntansi/{tipeAkun}/{idPerkiraan}/{idDivisi}/{idBank}/{dateRange}', [TransaksiAkuntansiController::class, 'datatables'])->name('datatables.transaksi.akuntansi');
 
     Route::prefix('report')->group(function () {
         Route::get('/pembelian/{supplierId}/{divisiId}/{bankId}/{status}/{dateRange}/{sortBy}/{sort}', [PembelianController::class, 'datatables'])->name('datatables.pembelian');
