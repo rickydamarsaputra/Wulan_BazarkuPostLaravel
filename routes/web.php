@@ -11,6 +11,8 @@ use App\Http\Controllers\master\EkspedisiController;
 use App\Http\Controllers\master\PerkiraanAkuntansiController;
 use App\Http\Controllers\master\SalesController;
 use App\Http\Controllers\master\SupplierController;
+use App\Http\Controllers\PembelianController as ControllersPembelianController;
+use App\Http\Controllers\PindahDanaController;
 use App\Http\Controllers\report\LabaController;
 use App\Http\Controllers\report\PembelianController;
 use App\Http\Controllers\report\PenjualanController as ReportPenjualanController;
@@ -40,6 +42,7 @@ Route::get('/', function () {
 Route::prefix('dashboard')->middleware('auth')->group(function () {
     // dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
+
     // master
     Route::prefix('master')->middleware('admin')->group(function () {
         Route::prefix('bank')->group(function () {
@@ -116,12 +119,28 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         Route::match(['get', 'post'], '/create', [PenjualanController::class, 'create'])->name('penjualan.create');
     });
 
+    // pembelian
+    Route::prefix('pembelian')->group(function () {
+        Route::get('/', [ControllersPembelianController::class, 'index'])->name('pembelian.index');
+        Route::get('/choose', [ControllersPembelianController::class, 'chooseDivisi'])->name('pembelian.choose.divisi');
+        Route::match(['get', 'post'], '/create', [ControllersPembelianController::class, 'chooseSubmit'])->name('pembelian.choose.submit');
+        Route::post('/submit', [ControllersPembelianController::class, 'pembelianSubmit'])->name('pembelian.submit');
+        Route::get('/{nomorPembelian}', [ControllersPembelianController::class, 'detail'])->name('pembelian.detail');
+        Route::get('/print/{nomorPembelian}', [ControllersPembelianController::class, 'print'])->name('pembelian.print.invoice');
+    });
+
     // transaksi akuntansi
     Route::prefix('transaksi-akuntansi')->group(function () {
         Route::get('/', [TransaksiAkuntansiController::class, 'index'])->name('transaksi.akuntansi.index');
         Route::get('/create', [TransaksiAkuntansiController::class, 'createView'])->name('transaksi.akuntansi.create.view');
         Route::post('/create', [TransaksiAkuntansiController::class, 'createProcess'])->name('transaksi.akuntansi.create.process');
         Route::delete('/{idTransaksi}', [TransaksiAkuntansiController::class, 'delete'])->name('transaksi.akuntansi.delete');
+    });
+
+    // pindah dana
+    Route::prefix('pindah-dana')->group(function () {
+        Route::get('/create', [PindahDanaController::class, 'createView'])->name('pindah.dana.create.view');
+        Route::post('/create', [PindahDanaController::class, 'createProcess'])->name('pindah.dana.create.process');
     });
 
     // report
@@ -178,6 +197,7 @@ Route::prefix('helpers')->group(function () {
 Route::prefix('datatables')->group(function () {
     Route::get('/penjualan', [PenjualanController::class, 'datatables'])->name('datatables.penjualan');
     Route::get('/transaksi-akuntansi/{tipeAkun}/{idPerkiraan}/{idDivisi}/{idBank}/{dateRange}', [TransaksiAkuntansiController::class, 'datatables'])->name('datatables.transaksi.akuntansi');
+    Route::get('/pembelian/{idSupplier}/{idDivisi}/{idBank}/{statusLunas}/{dateRange}', [ControllersPembelianController::class, 'datatables'])->name('datatables.filter.pembelian');
 
     Route::prefix('report')->group(function () {
         Route::get('/pembelian/{supplierId}/{divisiId}/{bankId}/{status}/{dateRange}/{sortBy}/{sort}', [PembelianController::class, 'datatables'])->name('datatables.pembelian');

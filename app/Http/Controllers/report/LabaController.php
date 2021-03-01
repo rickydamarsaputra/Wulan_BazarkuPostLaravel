@@ -160,16 +160,25 @@ class LabaController extends Controller
 
         $divisi = Divisi::whereIdDivisi($divisiId)->first();
         $perkiraanAkuntansi = PerkiraanAkuntansi::get(['ID_perkiraan', 'kode_perkiraan', 'nama_akun', 'tipe_akun']);
-        if ($divisiId > 0 && $salesId > 0) {
-            $penjualan =  Penjualan::with(['penjualanDetail'])->whereIdDivisi($divisiId)->whereIdSales($salesId)->whereBetween('tanggal_input', [$dateFirst, $dateLast])->get(['nomor_penjualan', 'total']);
-        } else if ($divisiId > 0 && $salesId == 0) {
-            $penjualan =  Penjualan::with(['penjualanDetail'])->whereIdDivisi($divisiId)->whereBetween('tanggal_input', [$dateFirst, $dateLast])->get(['nomor_penjualan', 'total']);
-        } else if ($divisiId == 0 && $salesId > 0) {
-            $penjualan =  Penjualan::with(['penjualanDetail'])->whereIdSales($salesId)->whereBetween('tanggal_input', [$dateFirst, $dateLast])->get(['nomor_penjualan', 'total']);
-        } else if ($divisiId == 0 && $salesId == 0) {
-            $penjualan =  Penjualan::with(['penjualanDetail'])->whereBetween('tanggal_input', [$dateFirst, $dateLast])->get(['nomor_penjualan', 'total']);
+        // if ($divisiId > 0 && $salesId > 0) {
+        //     $penjualan =  Penjualan::with(['penjualanDetail'])->whereIdDivisi($divisiId)->whereIdSales($salesId)->whereBetween('tanggal_input', [$dateFirst, $dateLast])->get(['nomor_penjualan', 'total']);
+        // } else if ($divisiId > 0 && $salesId == 0) {
+        //     $penjualan =  Penjualan::with(['penjualanDetail'])->whereIdDivisi($divisiId)->whereBetween('tanggal_input', [$dateFirst, $dateLast])->get(['nomor_penjualan', 'total']);
+        // } else if ($divisiId == 0 && $salesId > 0) {
+        //     $penjualan =  Penjualan::with(['penjualanDetail'])->whereIdSales($salesId)->whereBetween('tanggal_input', [$dateFirst, $dateLast])->get(['nomor_penjualan', 'total']);
+        // } else if ($divisiId == 0 && $salesId == 0) {
+        //     $penjualan =  Penjualan::with(['penjualanDetail'])->whereBetween('tanggal_input', [$dateFirst, $dateLast])->get(['nomor_penjualan', 'total']);
+        // }
+        $penjualan =  Penjualan::with(['penjualanDetail'])->whereBetween('tanggal_input', [$dateFirst, $dateLast]);
+
+        if ($divisiId != 0) {
+            $penjualan->whereIdDivisi($divisiId);
         }
-        $retur = Retur::whereBetween('tanggal_input', [$dateFirst, $dateLast])->get(['jenis_retur', 'nominal_retur', 'HPP']);
+        if ($salesId != 0) {
+            $penjualan->whereIdSales($salesId);
+        }
+
+        $retur = Retur::whereBetween('tanggal_input', [$dateFirst, $dateLast]);
         $labaRugiTransaksiAkuntansi = [];
         $totalPenjualan = 0;
         $returPenjualan = 0;
@@ -181,7 +190,7 @@ class LabaController extends Controller
         $hppPenjualanDetail = 0;
         $hppRetur = 0;
 
-        foreach ($penjualan as $loopItem) {
+        foreach ($penjualan->get(['nomor_penjualan', 'total']) as $loopItem) {
             $totalPenjualan += $loopItem->total;
 
             foreach ($loopItem['penjualanDetail'] as $loopItem) {
@@ -189,7 +198,10 @@ class LabaController extends Controller
             }
         }
 
-        foreach ($retur as $loopItem) {
+        if ($divisiId != 0) {
+            $retur->whereIdDivisi($divisiId);
+        }
+        foreach ($retur->get(['jenis_retur', 'nominal_retur', 'HPP']) as $loopItem) {
             if ($loopItem->jenis_retur == 1) {
                 $returPembelian += $loopItem->nominal_retur;
             } else {
@@ -208,15 +220,14 @@ class LabaController extends Controller
             ]);
 
             $nominalTransaksiAkuntansi = 0;
-            if ($divisiId > 0) {
-                foreach (TransaksiAkuntansi::whereIdPerkiraan($loopItem->ID_perkiraan)->whereIdDivisi($divisiId)->whereBetween('tanggal_transaksi', [$dateFirst, $dateLast])->get(['nominal']) as $loopItem) {
-                    $nominalTransaksiAkuntansi += $loopItem->nominal;
-                }
-            } else {
-                foreach (TransaksiAkuntansi::whereIdPerkiraan($loopItem->ID_perkiraan)->whereBetween('tanggal_transaksi', [$dateFirst, $dateLast])->get(['nominal']) as $loopItem) {
-                    $nominalTransaksiAkuntansi += $loopItem->nominal;
-                }
+            $transaksiAkuntansi = TransaksiAkuntansi::whereBetween('tanggal_transaksi', [$dateFirst, $dateLast])->whereIdPerkiraan($loopItem->ID_perkiraan);
+            if ($divisiId != 0) {
+                $transaksiAkuntansi->whereIdDivisi($divisiId);
             }
+            foreach ($transaksiAkuntansi->get(['nominal']) as $loopItem) {
+                $nominalTransaksiAkuntansi += $loopItem->nominal;
+            }
+
             $labaRugiTransaksiAkuntansi[$counter]['nominal'] = $nominalTransaksiAkuntansi;
 
             $counter++;
@@ -232,14 +243,14 @@ class LabaController extends Controller
             }
         }
         $hpp = $hppPenjualanDetail - $hppRetur;
-        $labaUsaha = ($totalPemasukan + $totalPenjualan + $returPenjualan) - ($totalPengeluaran + $returPembelian + $hpp);
+        $labaUsaha = ($totalPemasukan + $totalPenjualan + $returPembelian) - ($totalPengeluaran + $returPenjualan + $hpp);
 
         return view('pages.report.laba.template', [
             'divisi' => $divisi,
             'pemasukan' => $pemasukan,
             'pengeluaran' => $pengeluaran,
-            'totalPemasukan' => $totalPemasukan + $totalPenjualan + $returPenjualan,
-            'totalPengeluaran' => $totalPengeluaran + $returPembelian,
+            'totalPemasukan' => $totalPemasukan + $totalPenjualan + $returPembelian,
+            'totalPengeluaran' => $totalPengeluaran + $returPenjualan + $hpp,
             'totalPenjualan' => $totalPenjualan,
             'returPenjualan' => $returPenjualan,
             'returPembelian' => $returPembelian,

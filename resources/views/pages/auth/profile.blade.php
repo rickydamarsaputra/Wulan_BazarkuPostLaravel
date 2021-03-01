@@ -4,7 +4,7 @@
 @section('content')
 <div class="section-header d-flex justify-content-between">
   <h1>@yield('title')</h1>
-  <a href="{{route('penjualan.index')}}" class="btn btn-info">Kembali</a>
+  <a href="{{auth()->user()->role->nama_role != 'Kasir' ? route('dashboard.index') : route('penjualan.create')}}" class="btn btn-info">Kembali</a>
 </div>
 
 <div class="card">

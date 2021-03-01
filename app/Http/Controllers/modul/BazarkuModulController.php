@@ -47,8 +47,5 @@ class BazarkuModulController extends Controller
             'ID_transaksi_terakhir' => $idTransaksi,
             'ID_user_update_terakhir' => $user->ID_user,
         ]);
-        // return $nomorMutasi;
-
-        // return [$nomorMutasi, $idTransaksi];
     }
 }

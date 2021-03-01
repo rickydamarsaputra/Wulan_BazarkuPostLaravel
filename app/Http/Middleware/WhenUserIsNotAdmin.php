@@ -19,7 +19,7 @@ class WhenUserIsNotAdmin
     public function handle(Request $request, Closure $next)
     {
         if (auth()->user()->role->nama_role == "Kasir") {
-            // Alert::warning('Warning Title', 'Warning Message');
+            Alert::warning('Warning Title', 'Warning Message');
             return redirect()->action([PenjualanController::class, 'create']);
         }
         return $next($request);

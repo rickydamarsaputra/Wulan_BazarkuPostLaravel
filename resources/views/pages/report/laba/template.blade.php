@@ -16,7 +16,7 @@
     @endforeach
     <h6>· TOTAL PENJUALAN <span>Rp.{{number_format($totalPenjualan)}}</span></h6>
     <div class="bazarku__line__break"></div>
-    <h6> · RETUR PENJUALAN <span>Rp.{{number_format($returPenjualan)}}</span></h6>
+    <h6> · RETUR PEMBELIAN <span>Rp.{{number_format($returPembelian)}}</span></h6>
     <div class="bazarku__line__break"></div>
     <div class="d-flex justify-content-between text-success">
       <h6>TOTAL PENDAPATAN</h6>
@@ -32,7 +32,7 @@
     <h6>· {{$loopItem['kode']}} - {{$loopItem['nama_transaksi']}} <span>Rp.{{number_format($loopItem['nominal'])}}</span></h6>
     <div class="bazarku__line__break"></div>
     @endforeach
-    <h6> · RETUR PEMBELIAN <span>Rp.{{number_format($returPembelian)}}</span></h6>
+    <h6> · RETUR PENJUALAN <span>Rp.{{number_format($returPenjualan)}}</span></h6>
     <div class="bazarku__line__break"></div>
     <h6>· HARGA POKOK PENJUALAN <span>Rp.{{number_format($hpp)}}</span></h6>
     <div class="bazarku__line__break"></div>

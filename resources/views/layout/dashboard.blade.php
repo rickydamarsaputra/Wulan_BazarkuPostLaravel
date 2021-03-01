@@ -100,7 +100,7 @@
   <!-- Default Scripts -->
   <script>
     $(document).ready(() => {
-      $("select").select2();
+      $("select.form-control , select.form-select").select2();
       $(".daterange-cus").daterangepicker({
         locale: {
           format: 'YYYY-MM-DD'

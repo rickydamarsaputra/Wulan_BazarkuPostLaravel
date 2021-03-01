@@ -9,9 +9,12 @@
         <ul class="sidebar-menu">
             <li class="menu-header">Dashboard</li>
             <li>
-                <a class="nav-link" href="{{route('dashboard.index')}}"><i class="fas fa-pencil-ruler"></i> <span>Dashboard</span></a>
+                <a class="nav-link" href="{{route('dashboard.index')}}"><i class="fas fa-pencil-ruler"></i><span>Dashboard</span></a>
             </li>
             @if(auth()->user()->role->nama_role != "Kasir")
+            <li>
+                <a class="nav-link" href="{{route('pindah.dana.create.view')}}"><i class="fas fa-angle-double-right"></i><span>Pindah Dana</span></a>
+            </li>
             <li class="menu-header">Starter</li>
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-shopping-cart"></i><span>Penjualan</span></a>
@@ -25,7 +28,18 @@
                 </ul>
             </li>
             <li class="nav-item dropdown">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-shopping-cart"></i><span>Transaksi Akuntansi</span></a>
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-cart-arrow-down"></i><span>Pembelian</span></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="nav-link" href="{{route('pembelian.index')}}"><i class="far fa-chart-bar"></i><span>Semua Pembelian</span></a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{{route('pembelian.choose.divisi')}}"><i class="fas fa-cart-arrow-down"></i><span>Tambah Pembelian</span></a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-battery-full"></i><span>Transaksi Akuntansi</span></a>
                 <ul class="dropdown-menu">
                     <li>
                         <a class="nav-link" href="{{route('transaksi.akuntansi.index')}}"><i class="fa fa-battery-full"></i><span class="text-nowrap">Semua Transaksi Akuntansi</span></a>
@@ -88,10 +102,12 @@
             @endif
         </ul>
 
-        <!-- <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
-            <a href="https://getstisla.com/docs" class="btn btn-primary btn-lg btn-block btn-icon-split">
-                <i class="fas fa-rocket"></i> Documentation
+        @if(auth()->user()->role->nama_role == "Kasir")
+        <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
+            <a href="{{route('penjualan.create')}}" class="btn btn-primary btn-lg btn-block btn-icon-split">
+                <i class="fas fa-shopping-cart"></i> Tambah Penjualan
             </a>
-        </div> -->
+        </div>
+        @endif
     </aside>
 </div>
