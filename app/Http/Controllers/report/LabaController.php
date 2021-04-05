@@ -242,6 +242,9 @@ class LabaController extends Controller
                 $totalPengeluaran += $loopItem['nominal'];
             }
         }
+
+        // return TransaksiAkuntansi::whereBetween('tanggal_transaksi', [$dateFirst, $dateLast])->get();
+
         $hpp = $hppPenjualanDetail - $hppRetur;
         $labaUsaha = ($totalPemasukan + $totalPenjualan + $returPembelian) - ($totalPengeluaran + $returPenjualan + $hpp);
 

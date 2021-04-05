@@ -48,6 +48,15 @@
                 </ul>
             </li>
             <li class="nav-item dropdown">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-undo"></i><span>Retur</span></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="nav-link" href="{{route('retur.penjualan.index')}}"><i class="fas fa-plus-square"></i><span class="text-nowrap">Retur Penjualan</span></a>
+                        <a class="nav-link" href="{{route('retur.pembelian.index')}}"><i class="fas fa-minus-square"></i><span class="text-nowrap">Retur Pembelian</span></a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-align-justify"></i><span>Master</span></a>
                 <ul class="dropdown-menu">
                     <li>

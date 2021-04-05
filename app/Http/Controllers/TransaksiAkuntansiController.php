@@ -99,7 +99,7 @@ class TransaksiAkuntansiController extends Controller
         $dateExplode = explode(' ', $dateRange);
         $dateFirst = $dateExplode[0];
         $dateLast = $dateExplode[2];
-        $transaksi = TransaksiAkuntansi::with(['bank', 'divisi'])->whereBetween('tanggal_input', [$dateFirst, $dateLast]);
+        $transaksi = TransaksiAkuntansi::with(['bank', 'divisi'])->whereBetween('tanggal_transaksi', [$dateFirst, $dateLast]);
 
         if ($tipeAkun != 0) {
             $transaksi->whereTipeAkun($tipeAkun);

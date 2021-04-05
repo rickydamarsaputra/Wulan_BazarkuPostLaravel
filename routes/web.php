@@ -20,6 +20,8 @@ use App\Http\Controllers\report\ProdukTerlarisController;
 use App\Http\Controllers\report\ReturPenjualanController;
 use App\Http\Controllers\report\StokProdukController;
 use App\Http\Controllers\report\StokProdukLengkapController;
+use App\Http\Controllers\retur\ReturPembelianController;
+use App\Http\Controllers\retur\ReturPenjualanController as ReturReturPenjualanController;
 use App\Http\Controllers\TransaksiAkuntansiController;
 use App\Models\Role;
 use App\Models\User;
@@ -137,6 +139,18 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         Route::delete('/{idTransaksi}', [TransaksiAkuntansiController::class, 'delete'])->name('transaksi.akuntansi.delete');
     });
 
+    // retur
+    Route::prefix('retur')->group(function () {
+        // retur penjualan
+        Route::prefix('penjualan')->group(function () {
+            Route::get('/', [ReturReturPenjualanController::class, 'index'])->name('retur.penjualan.index');
+        });
+        // retur pembelian
+        Route::prefix('pembelian')->group(function () {
+            Route::get('/', [ReturPembelianController::class, 'index'])->name('retur.pembelian.index');
+        });
+    });
+
     // pindah dana
     Route::prefix('pindah-dana')->group(function () {
         Route::get('/create', [PindahDanaController::class, 'createView'])->name('pindah.dana.create.view');
@@ -198,6 +212,11 @@ Route::prefix('datatables')->group(function () {
     Route::get('/penjualan', [PenjualanController::class, 'datatables'])->name('datatables.penjualan');
     Route::get('/transaksi-akuntansi/{tipeAkun}/{idPerkiraan}/{idDivisi}/{idBank}/{dateRange}', [TransaksiAkuntansiController::class, 'datatables'])->name('datatables.transaksi.akuntansi');
     Route::get('/pembelian/{idSupplier}/{idDivisi}/{idBank}/{statusLunas}/{dateRange}', [ControllersPembelianController::class, 'datatables'])->name('datatables.filter.pembelian');
+
+    Route::prefix('retur')->group(function () {
+        Route::get('/penjualan/{divisi}/{dateRange}', [ReturReturPenjualanController::class, 'datatables'])->name('datatables.retur.penjualan');
+        Route::get('/pembelian/{divisi}/{dateRange}', [ReturPembelianController::class, 'datatables'])->name('datatables.retur.pembelian');
+    });
 
     Route::prefix('report')->group(function () {
         Route::get('/pembelian/{supplierId}/{divisiId}/{bankId}/{status}/{dateRange}/{sortBy}/{sort}', [PembelianController::class, 'datatables'])->name('datatables.pembelian');
